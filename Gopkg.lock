@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"
+  name = "github.com/gorilla/websocket"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "66b9c49e59c6c48f0ffce28c2d8b8a5678502c6d"
+  version = "v1.4.0"
+
+[[projects]]
   branch = "master"
   digest = "1:7878504f3873b3668000cde1c8d6a2af7211615d43ca9c66ebfc5b85cd71843c"
   name = "github.com/liviosoares/go-watson-sdk"
@@ -11,6 +19,14 @@
   ]
   pruneopts = "UT"
   revision = "0072a48d524a239340fa8fd2d6f0be8eb9534d17"
+
+[[projects]]
+  digest = "1:ace662a36243b5cdc2f71e654175dc192f903fafbf3411a95bc910c1cad53ce7"
+  name = "github.com/nlopes/slack"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "0db1d5eae1116bf7c8ed96c6749acfbf4daaec3e"
+  version = "v0.3.0"
 
 [[projects]]
   digest = "1:40e195917a951a8bf867cd05de2a46aaf1806c50cf92eebf4c16f78cd196f747"
@@ -26,6 +42,7 @@
   input-imports = [
     "github.com/liviosoares/go-watson-sdk/watson",
     "github.com/liviosoares/go-watson-sdk/watson/personality_insights",
+    "github.com/nlopes/slack",
     "github.com/pkg/errors",
   ]
   solver-name = "gps-cdcl"
