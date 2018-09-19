@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/cloudogu/Bachelor_go/core"
+	"github.com/cloudogu/BachelorGo/core"
 	"os"
 )
 
