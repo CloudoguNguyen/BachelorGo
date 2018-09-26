@@ -7,7 +7,7 @@ import (
 
 type MessageCreator struct {
 	watsonPI *personality_insights.Client
-	recast   *Recast
+	recast   *RecastClient
 }
 
 func NewMessageCreator() (*MessageCreator, error) {
@@ -17,11 +17,11 @@ func NewMessageCreator() (*MessageCreator, error) {
 		return nil, errors.Wrapf(err, "failed to create watson PI")
 	}
 
-	recast := NewRecast()
+	recast := NewRecastClient()
 
 	return &MessageCreator{pi, recast}, nil
 }
 
 func (creator *MessageCreator) Response(message string) string {
-
+	return ""
 }

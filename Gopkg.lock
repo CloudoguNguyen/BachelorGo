@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  digest = "1:9e9a4347381ace1f9d44a3141051c7e8a45dbac7e214329018dd1135630d8992"
+  name = "github.com/RecastAI/SDK-Golang"
+  packages = ["recast"]
+  pruneopts = "UT"
+  revision = "72db5fff5ff8ed118b5bfe112b3939915c2b6d6a"
+  version = "3.2.0"
+
+[[projects]]
   digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"
   name = "github.com/gorilla/websocket"
   packages = ["."]
@@ -21,12 +29,28 @@
   revision = "0072a48d524a239340fa8fd2d6f0be8eb9534d17"
 
 [[projects]]
+  branch = "master"
+  digest = "1:7aefb397a53fc437c90f0fdb3e1419c751c5a3a165ced52325d5d797edf1aca6"
+  name = "github.com/moul/http2curl"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "9ac6cf4d929b2fa8fd2d2e6dec5bb0feb4f4911d"
+
+[[projects]]
   digest = "1:ace662a36243b5cdc2f71e654175dc192f903fafbf3411a95bc910c1cad53ce7"
   name = "github.com/nlopes/slack"
   packages = ["."]
   pruneopts = "UT"
   revision = "0db1d5eae1116bf7c8ed96c6749acfbf4daaec3e"
   version = "v0.3.0"
+
+[[projects]]
+  digest = "1:d776f3e95774a8719f2e57fabbbb33103035fe072dcf6f1864f33abd17b753e5"
+  name = "github.com/parnurzeal/gorequest"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "a578a48e8d6ca8b01a3b18314c43c6716bb5f5a3"
+  version = "v0.2.15"
 
 [[projects]]
   digest = "1:40e195917a951a8bf867cd05de2a46aaf1806c50cf92eebf4c16f78cd196f747"
@@ -36,10 +60,45 @@
   revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
   version = "v0.8.0"
 
+[[projects]]
+  branch = "master"
+  digest = "1:a412caf33b5d3c7938c28e1e745c10664bd180277b73ab3b34c0c467886f9969"
+  name = "golang.org/x/net"
+  packages = [
+    "idna",
+    "publicsuffix",
+  ]
+  pruneopts = "UT"
+  revision = "f04abc6bdfa7a0171a8a0c9fd2ada9391044d056"
+
+[[projects]]
+  digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
+  name = "golang.org/x/text"
+  packages = [
+    "collate",
+    "collate/build",
+    "internal/colltab",
+    "internal/gen",
+    "internal/tag",
+    "internal/triegen",
+    "internal/ucd",
+    "language",
+    "secure/bidirule",
+    "transform",
+    "unicode/bidi",
+    "unicode/cldr",
+    "unicode/norm",
+    "unicode/rangetable",
+  ]
+  pruneopts = "UT"
+  revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
+  version = "v0.3.0"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/RecastAI/SDK-Golang/recast",
     "github.com/liviosoares/go-watson-sdk/watson",
     "github.com/liviosoares/go-watson-sdk/watson/personality_insights",
     "github.com/nlopes/slack",

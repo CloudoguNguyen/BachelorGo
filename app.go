@@ -1,24 +1,25 @@
 package main
 
+import (
+	"fmt"
+	"github.com/cloudogu/BachelorGo/core"
+)
+
 const TOKEN = "fca33d727f5037db12c6039a7efd5d9b"
 
 func main() {
+
+	//opts := recast.ConverseOpts{Language: "en"}
+	re := core.NewRecastClient()
+
+	rep, err := re.GetReplies("How's the weather?", nil)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(rep)
+
 	/*
-			re := core.NewRecast(RequestToken)
-
-			answer,err := re.GetNextAnswer("tell me a joke","1")
-			if err != nil{
-				fmt.Println(err)
-			}
-			fmt.Println(answer[0].Content)
-
-			answer,err = re.GetNextAnswer("dumbass","1")
-			if err != nil{
-				fmt.Println(err)
-			}
-			fmt.Println(answer[0].Content)
-
-
 		pi, err := core.NewPersonalityInsight()
 		if err != nil {
 			fmt.Println(err)

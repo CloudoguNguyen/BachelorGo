@@ -23,7 +23,7 @@ func NewSlackBot() (*SlackBot, error) {
 		return nil, errors.Wrapf(err, "failed to create MessageCreator")
 	}
 
-	return &SlackBot{token: token, client: client, rtm: rtm}, nil
+	return &SlackBot{token: token, client: client, rtm: rtm, creator: creator}, nil
 }
 
 func (bot *SlackBot) Run() {
