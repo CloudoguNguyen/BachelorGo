@@ -2,6 +2,7 @@ package core
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/liviosoares/go-watson-sdk/watson"
 	"github.com/liviosoares/go-watson-sdk/watson/personality_insights"
 	"github.com/pkg/errors"
@@ -9,7 +10,14 @@ import (
 	"os"
 )
 
-func NewPersonalityInsight() (*personality_insights.Client, error) {
+const profileSavePath = "/home/tnguyen/GolandProjects/src/github.com/cloudogu/BachelorGo/resources/profile.json"
+
+type WatsonPI struct {
+	Client  personality_insights.Client
+	Profile personality_insights.Profile
+}
+
+func NewPersonalityInsight() (*WatsonPI, error) {
 
 	//ToDo username and pw into own file?
 	config := watson.Config{
@@ -21,11 +29,26 @@ func NewPersonalityInsight() (*personality_insights.Client, error) {
 
 	client, err := personality_insights.NewClient(config)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to create personality client")
+		return nil, errors.Wrapf(err, "failed to create personality Client")
 	}
 
-	return &client, nil
+	var profile personality_insights.Profile
 
+	return &WatsonPI{client, profile}, nil
+
+}
+
+func (watson *WatsonPI) setProfile(pathToContent string) {
+	file, err := os.Open(pathToContent)
+	if err != nil {
+		fmt.Println(err)
+	}
+	profile, err := watson.Client.GetProfile(file, "application/json", "en")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	watson.Profile = profile
 }
 
 func GetAggreeableness(profile personality_insights.Profile) personality_insights.TraitTree {
@@ -53,37 +76,36 @@ func GetEmotionalStability(profile personality_insights.Profile) personality_ins
 	return value
 }
 
-func SaveJsonFile(v interface{}, path string) error {
-	fo, err := os.Create(path)
+func (watson *WatsonPI) SaveProfileAsJson() error {
+	fo, err := os.Create(profileSavePath)
 	if err != nil {
-		return errors.Wrapf(err, "failed to create %s", path)
+		return errors.Wrapf(err, "failed to create Profile save path")
 	}
 
 	defer fo.Close()
 	encoder := json.NewEncoder(fo)
 
-	err = encoder.Encode(v)
+	err = encoder.Encode(watson.Profile)
 	if err != nil {
 		return errors.Wrapf(err, "failed to create encode")
 	}
 	return nil
 }
 
-func LoadJsonProfile(path string) (*personality_insights.Profile, error) {
-	jsonFile, err := os.Open(path)
+func (watson *WatsonPI) LoadJsonProfile() error {
+	jsonFile, err := os.Open(profileSavePath)
 	// if we os.Open returns an error then handle it
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to read %s", path)
+		return errors.Wrapf(err, "failed to read %s", profileSavePath)
 	}
 	defer jsonFile.Close()
 
-	var profile personality_insights.Profile
-
 	byteValue, err := ioutil.ReadAll(jsonFile)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to load %s into Json", path)
+		return errors.Wrapf(err, "failed to load %s into Json", profileSavePath)
 	}
-	json.Unmarshal(byteValue, &profile)
+	json.Unmarshal(byteValue, &watson.Profile)
 
-	return &profile, nil
+	return nil
+
 }

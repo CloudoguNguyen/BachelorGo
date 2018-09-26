@@ -24,10 +24,7 @@ func main() {
 				}
 	*/
 	/*
-		pi, err := core.NewPersonalityInsight()
-		if err != nil {
-			fmt.Println(err)
-		}
+
 		file, err := os.Open("resources/contents.json")
 		if err != nil {
 			fmt.Println(err)
@@ -38,10 +35,17 @@ func main() {
 
 		}
 	*/
-	profile, err := core.LoadJsonProfile("/home/tnguyen/GolandProjects/src/github.com/cloudogu/BachelorGo/resources/profile.json")
+
+	pi, err := core.NewPersonalityInsight()
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Println(profile.Tree)
+	err = pi.LoadJsonProfile()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(core.GetOpenness(pi.Profile))
+
 }

@@ -2,12 +2,11 @@ package core
 
 import (
 	"fmt"
-	"github.com/liviosoares/go-watson-sdk/watson/personality_insights"
 	"github.com/pkg/errors"
 )
 
 type MessageCreator struct {
-	watsonPI *personality_insights.Client
+	watsonPI *WatsonPI
 	recast   *RecastClient
 }
 
