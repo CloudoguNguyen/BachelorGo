@@ -17,7 +17,7 @@ func NewMessageCreator() (*MessageCreator, error) {
 		return nil, errors.Wrapf(err, "failed to create watson PI")
 	}
 
-	recast := NewRecastClient()
+	recast := NewRecast()
 
 	return &MessageCreator{pi, recast}, nil
 }

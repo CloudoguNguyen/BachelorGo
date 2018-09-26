@@ -1,36 +1,74 @@
 package core
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
-	"github.com/RecastAI/SDK-Golang/recast"
 	"github.com/pkg/errors"
+	"io/ioutil"
+	"net/http"
 )
 
-const RequestToken = "e16b673cc84ab7b5d490115dedfe7d71"
+const RequestToken = "2019b5440f2c880dd8ebfc7d2c26df31"
 
 type RecastClient struct {
-	client *recast.RequestClient
+	requestToken string
 }
 
-func NewRecastClient() *RecastClient {
+func NewRecast() *RecastClient {
 
-	client := recast.RequestClient{Token: RequestToken, Language: "en"}
-
-	return &RecastClient{client: &client}
+	return &RecastClient{requestToken: RequestToken}
 }
 
-func (rc *RecastClient) GetReplies(message string, opts *recast.ConverseOpts) ([]string, error) {
-
-	response, err := rc.client.ConverseText(message, opts)
-	if err != nil {
-		return nil, errors.Wrapf(err, "failed to converse text %s", message)
+func (recast *RecastClient) getResponseFromRecastServer(message string, conversationID string) (*http.Response, error) {
+	m := Message{
+		Content: message,
+		Type:    "text",
+	}
+	data := Payload{
+		Message:        m,
+		ConversationID: conversationID,
 	}
 
-	fmt.Println(response)
+	payloadBytes, err := json.Marshal(data)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to marshal %s", data)
+	}
+	body := bytes.NewReader(payloadBytes)
 
-	fmt.Println(response.Action)
-	fmt.Println(response.Language)
+	req, err := http.NewRequest("POST", "https://api.recast.ai/build/v1/dialog", body)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to POST to recast.ai website")
+	}
+	req.Header.Set("Authorization", "Token "+recast.requestToken)
+	req.Header.Set("Content-Type", "application/json")
 
-	return response.Replies, nil
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to execute the request")
+	}
 
+	return resp, nil
+}
+
+func (recast *RecastClient) GetNextAnswer(message string, conversationID string) ([]Message, error) {
+
+	resp, err := recast.getResponseFromRecastServer(message, conversationID)
+	if err != nil {
+		fmt.Println(err)
+	}
+	var answerFromRecast RecastResponse
+
+	byteBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = json.Unmarshal(byteBody, &answerFromRecast)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer resp.Body.Close()
+
+	return answerFromRecast.Results.Messages, nil
 }
