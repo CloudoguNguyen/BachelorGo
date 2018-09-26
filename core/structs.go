@@ -52,3 +52,39 @@ type RecastResponse struct {
 	} `json:"results"`
 	Message string `json:"message"`
 }
+
+type Profile struct {
+	Tree struct {
+		ID       string `json:"id"`
+		Name     string `json:"name"`
+		Children []struct {
+			ID       string `json:"id"`
+			Name     string `json:"name"`
+			Children []struct {
+				ID         string  `json:"id"`
+				Name       string  `json:"name"`
+				Category   string  `json:"category"`
+				Percentage float64 `json:"percentage"`
+				Children   []struct {
+					ID            string  `json:"id"`
+					Name          string  `json:"name"`
+					Category      string  `json:"category"`
+					Percentage    float64 `json:"percentage"`
+					SamplingError float64 `json:"sampling_error"`
+					Children      []struct {
+						ID            string  `json:"id"`
+						Name          string  `json:"name"`
+						Category      string  `json:"category"`
+						Percentage    float64 `json:"percentage"`
+						SamplingError float64 `json:"sampling_error"`
+					} `json:"children"`
+				} `json:"children"`
+			} `json:"children"`
+		} `json:"children"`
+	} `json:"tree"`
+	ID               string `json:"id"`
+	Source           string `json:"source"`
+	WordCount        int    `json:"word_count"`
+	WordCountMessage string `json:"word_count_message"`
+	ProcessedLang    string `json:"processed_lang"`
+}

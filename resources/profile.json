@@ -1,79 +1,429 @@
 {
-   "contentItems": [
+  "tree": {
+    "id": "r",
+    "name": "root",
+    "children": [
       {
-         "content": "Wow, I liked @TheRock before, now I really SEE how special he is. The daughter story was IT for me. So great! #MasterClass",
-         "contenttype": "text/plain",
-         "language": "en"
+        "id": "personality",
+        "name": "Big 5",
+        "children": [
+          {
+            "id": "Agreeableness_parent",
+            "name": "Agreeableness",
+            "category": "personality",
+            "percentage": 0.9428053152762406,
+            "children": [
+              {
+                "id": "Openness",
+                "name": "Openness",
+                "category": "personality",
+                "percentage": 0.6063938875342371,
+                "sampling_error": 0.0640391719,
+                "children": [
+                  {
+                    "id": "Adventurousness",
+                    "name": "Adventurousness",
+                    "category": "personality",
+                    "percentage": 0.24301175903386268,
+                    "sampling_error": 0.0535656727
+                  },
+                  {
+                    "id": "Artistic interests",
+                    "name": "Artistic interests",
+                    "category": "personality",
+                    "percentage": 0.9021036520483958,
+                    "sampling_error": 0.1091710115
+                  },
+                  {
+                    "id": "Emotionality",
+                    "name": "Emotionality",
+                    "category": "personality",
+                    "percentage": 0.9756825068217382,
+                    "sampling_error": 0.0500839318
+                  },
+                  {
+                    "id": "Imagination",
+                    "name": "Imagination",
+                    "category": "personality",
+                    "percentage": 0.7592811677450311,
+                    "sampling_error": 0.0676812947
+                  },
+                  {
+                    "id": "Intellect",
+                    "name": "Intellect",
+                    "category": "personality",
+                    "percentage": 0.518033085670476,
+                    "sampling_error": 0.0593579601
+                  },
+                  {
+                    "id": "Liberalism",
+                    "name": "Authority-challenging",
+                    "category": "personality",
+                    "percentage": 0.4147459251220103,
+                    "sampling_error": 0.0874104827
+                  }
+                ]
+              },
+              {
+                "id": "Conscientiousness",
+                "name": "Conscientiousness",
+                "category": "personality",
+                "percentage": 0.6763087552294939,
+                "sampling_error": 0.08011102860000001,
+                "children": [
+                  {
+                    "id": "Achievement striving",
+                    "name": "Achievement striving",
+                    "category": "personality",
+                    "percentage": 0.8839699723333306,
+                    "sampling_error": 0.1033400914
+                  },
+                  {
+                    "id": "Cautiousness",
+                    "name": "Cautiousness",
+                    "category": "personality",
+                    "percentage": 0.5678042682881499,
+                    "sampling_error": 0.0956824758
+                  },
+                  {
+                    "id": "Dutifulness",
+                    "name": "Dutifulness",
+                    "category": "personality",
+                    "percentage": 0.8950091645300825,
+                    "sampling_error": 0.0641664556
+                  },
+                  {
+                    "id": "Orderliness",
+                    "name": "Orderliness",
+                    "category": "personality",
+                    "percentage": 0.6386536063007868,
+                    "sampling_error": 0.0735082695
+                  },
+                  {
+                    "id": "Self-discipline",
+                    "name": "Self-discipline",
+                    "category": "personality",
+                    "percentage": 0.8152163626068691,
+                    "sampling_error": 0.0490358226
+                  },
+                  {
+                    "id": "Self-efficacy",
+                    "name": "Self-efficacy",
+                    "category": "personality",
+                    "percentage": 0.7789099224600077,
+                    "sampling_error": 0.0966382812
+                  }
+                ]
+              },
+              {
+                "id": "Extraversion",
+                "name": "Extraversion",
+                "category": "personality",
+                "percentage": 0.9300851730122673,
+                "sampling_error": 0.059878372900000004,
+                "children": [
+                  {
+                    "id": "Activity level",
+                    "name": "Activity level",
+                    "category": "personality",
+                    "percentage": 0.7126909134110221,
+                    "sampling_error": 0.0818740387
+                  },
+                  {
+                    "id": "Assertiveness",
+                    "name": "Assertiveness",
+                    "category": "personality",
+                    "percentage": 0.7044619618374025,
+                    "sampling_error": 0.08725030930000001
+                  },
+                  {
+                    "id": "Cheerfulness",
+                    "name": "Cheerfulness",
+                    "category": "personality",
+                    "percentage": 0.9631219013067822,
+                    "sampling_error": 0.1097945573
+                  },
+                  {
+                    "id": "Excitement-seeking",
+                    "name": "Excitement-seeking",
+                    "category": "personality",
+                    "percentage": 0.5038344117706757,
+                    "sampling_error": 0.0838701912
+                  },
+                  {
+                    "id": "Friendliness",
+                    "name": "Outgoing",
+                    "category": "personality",
+                    "percentage": 0.9417829673699766,
+                    "sampling_error": 0.0788853618
+                  },
+                  {
+                    "id": "Gregariousness",
+                    "name": "Gregariousness",
+                    "category": "personality",
+                    "percentage": 0.7602868819933852,
+                    "sampling_error": 0.0601051014
+                  }
+                ]
+              },
+              {
+                "id": "Agreeableness",
+                "name": "Agreeableness",
+                "category": "personality",
+                "percentage": 0.9428053152762406,
+                "sampling_error": 0.100856739,
+                "children": [
+                  {
+                    "id": "Altruism",
+                    "name": "Altruism",
+                    "category": "personality",
+                    "percentage": 0.9872355058773818,
+                    "sampling_error": 0.0742405658
+                  },
+                  {
+                    "id": "Cooperation",
+                    "name": "Cooperation",
+                    "category": "personality",
+                    "percentage": 0.8013972501975566,
+                    "sampling_error": 0.0830935077
+                  },
+                  {
+                    "id": "Modesty",
+                    "name": "Modesty",
+                    "category": "personality",
+                    "percentage": 0.6610989687196465,
+                    "sampling_error": 0.059156467299999994
+                  },
+                  {
+                    "id": "Morality",
+                    "name": "Uncompromising",
+                    "category": "personality",
+                    "percentage": 0.8270064012902181,
+                    "sampling_error": 0.06604591209999999
+                  },
+                  {
+                    "id": "Sympathy",
+                    "name": "Sympathy",
+                    "category": "personality",
+                    "percentage": 0.9108514563663641,
+                    "sampling_error": 0.1019584186
+                  },
+                  {
+                    "id": "Trust",
+                    "name": "Trust",
+                    "category": "personality",
+                    "percentage": 0.8534953912353106,
+                    "sampling_error": 0.0598083284
+                  }
+                ]
+              },
+              {
+                "id": "Neuroticism",
+                "name": "Emotional range",
+                "category": "personality",
+                "percentage": 0.8328795266078289,
+                "sampling_error": 0.095275985,
+                "children": [
+                  {
+                    "id": "Anger",
+                    "name": "Fiery",
+                    "category": "personality",
+                    "percentage": 0.3389178331910261,
+                    "sampling_error": 0.0981536889
+                  },
+                  {
+                    "id": "Anxiety",
+                    "name": "Prone to worry",
+                    "category": "personality",
+                    "percentage": 0.4274023549657931,
+                    "sampling_error": 0.0579652571
+                  },
+                  {
+                    "id": "Depression",
+                    "name": "Melancholy",
+                    "category": "personality",
+                    "percentage": 0.17288079385014204,
+                    "sampling_error": 0.062126612799999995
+                  },
+                  {
+                    "id": "Immoderation",
+                    "name": "Immoderation",
+                    "category": "personality",
+                    "percentage": 0.3488160121187257,
+                    "sampling_error": 0.0556545747
+                  },
+                  {
+                    "id": "Self-consciousness",
+                    "name": "Self-consciousness",
+                    "category": "personality",
+                    "percentage": 0.31568405685418466,
+                    "sampling_error": 0.060027685100000006
+                  },
+                  {
+                    "id": "Vulnerability",
+                    "name": "Susceptible to stress",
+                    "category": "personality",
+                    "percentage": 0.35259191571655046,
+                    "sampling_error": 0.0895795262
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       {
-         "content": ".@TheRock how did you Know to listen to your gut and Not go back to football? #Masterclass",
-         "contenttype": "text/plain",
-         "language": "en"
+        "id": "needs",
+        "name": "Needs",
+        "children": [
+          {
+            "id": "Harmony_parent",
+            "name": "Harmony",
+            "category": "needs",
+            "percentage": 0.9314019342288696,
+            "children": [
+              {
+                "id": "Challenge",
+                "name": "Challenge",
+                "category": "needs",
+                "percentage": 0.2677906905903623,
+                "sampling_error": 0.08667970459999999
+              },
+              {
+                "id": "Closeness",
+                "name": "Closeness",
+                "category": "needs",
+                "percentage": 0.8099118033254384,
+                "sampling_error": 0.0855393154
+              },
+              {
+                "id": "Curiosity",
+                "name": "Curiosity",
+                "category": "needs",
+                "percentage": 0.459515345381097,
+                "sampling_error": 0.1238625421
+              },
+              {
+                "id": "Excitement",
+                "name": "Excitement",
+                "category": "needs",
+                "percentage": 0.28174022381514174,
+                "sampling_error": 0.1130810486
+              },
+              {
+                "id": "Harmony",
+                "name": "Harmony",
+                "category": "needs",
+                "percentage": 0.9314019342288696,
+                "sampling_error": 0.1132022992
+              },
+              {
+                "id": "Ideal",
+                "name": "Ideal",
+                "category": "needs",
+                "percentage": 0.3999057978194021,
+                "sampling_error": 0.1026491235
+              },
+              {
+                "id": "Liberty",
+                "name": "Liberty",
+                "category": "needs",
+                "percentage": 0.483875711668869,
+                "sampling_error": 0.1496668281
+              },
+              {
+                "id": "Love",
+                "name": "Love",
+                "category": "needs",
+                "percentage": 0.8425047535860561,
+                "sampling_error": 0.10418982560000001
+              },
+              {
+                "id": "Practicality",
+                "name": "Practicality",
+                "category": "needs",
+                "percentage": 0.33888652048639406,
+                "sampling_error": 0.09048299039999999
+              },
+              {
+                "id": "Self-expression",
+                "name": "Self-expression",
+                "category": "needs",
+                "percentage": 0.6063232932808001,
+                "sampling_error": 0.0842075982
+              },
+              {
+                "id": "Stability",
+                "name": "Stability",
+                "category": "needs",
+                "percentage": 0.884062583265792,
+                "sampling_error": 0.1101156078
+              },
+              {
+                "id": "Structure",
+                "name": "Structure",
+                "category": "needs",
+                "percentage": 0.5528794078618275,
+                "sampling_error": 0.0826840361
+              }
+            ]
+          }
+        ]
       },
       {
-         "content": ".@TheRock moving back in with your parents so humbling. \" on the other side of your pain is something good if you can hold on\" #masterclass",
-         "contenttype": "text/plain",
-         "language": "en"
-      },
-      {
-         "content": "Wow aren't you loving @TheRock and his candor? #Masterclass",
-         "contenttype": "text/plain",
-         "language": "en"
-      },
-      {
-         "content": "RT @patt_t: @TheRock @Oprah @RichOnOWN @OWNTV this interview makes me like you as a fellow human even more for being so real.",
-         "contenttype": "text/plain",
-         "language": "en"
-      },
-      {
-         "content": "\"Be You\".. That's the best advice ever @TheRock #MastersClass",
-         "contenttype": "text/plain",
-         "language": "en"
-      },
-      {
-         "content": "Supersoulers let's lift our spirits pray and hold Paris in the Light\ud83d\ude4f\ud83c\udffe",
-         "contenttype": "text/plain",
-         "language": "en"
-      },
-      {
-         "content": "RT @DeepakChopra: What I learned in week 1: Become What You Believe 21-Day Meditation Experience - https:\/\/t.co\/kqaMaMqEUp #GoogleAlerts",
-         "contenttype": "text/plain",
-         "language": "en"
-      },
-      {
-         "content": "Watching Bryan Stevenson on #SuperSoulSunday! \"You are not the worst mistake you ever made\".\nAren't we glad  about that.",
-         "contenttype": "text/plain",
-         "language": "en"
-      },
-      {
-         "content": ".@CherylStrayed  BRAVE ENOUGH my new favorite thing! Gonna buy a copy for all my girls. #Perfectgift https:\/\/t.co\/gz1tnv8t8K",
-         "contenttype": "text/plain",
-         "language": "en"
-      },
-      {
-         "content": "Stevie Wonder singing \"Happy Birthday to you!\" to my dear  mariashriver. A phenomenal woman and\u2026 https:\/\/t.co\/Ygm5eDIs4f",
-         "contenttype": "text/plain",
-         "language": "en"
-      },
-      {
-         "content": "It\u2019s my faaaaavorite time of the Year!  For the first time you can shop the list on @amazon! https:\/\/t.co\/a6GMvVrhjN https:\/\/t.co\/sJlQMROq5U",
-         "contenttype": "text/plain",
-         "language": "en"
-      },
-      {
-         "content": "Incredible story \"the spirit of the Lord is on you\" thanks for sharing @smokey_robinson #Masterclass",
-         "contenttype": "text/plain",
-         "language": "en"
-      },
-      {
-         "content": "Wasnt that incredible story about @smokey_robinson 's dad leaving his family at 12. #MasterClass",
-         "contenttype": "text/plain",
-         "language": "en"
-      },
-      {
-         "content": "Gayle, Charlie, Nora @CBSThisMorning  Congratulations!  #1000thshow",
-         "contenttype": "text/plain",
-         "language": "en"
+        "id": "values",
+        "name": "Values",
+        "children": [
+          {
+            "id": "Conservation_parent",
+            "name": "Conservation",
+            "category": "values",
+            "percentage": 0.9633699763486763,
+            "children": [
+              {
+                "id": "Conservation",
+                "name": "Conservation",
+                "category": "values",
+                "percentage": 0.9633699763486763,
+                "sampling_error": 0.0703129768
+              },
+              {
+                "id": "Openness to change",
+                "name": "Openness to change",
+                "category": "values",
+                "percentage": 0.14382036097378614,
+                "sampling_error": 0.0670549745
+              },
+              {
+                "id": "Hedonism",
+                "name": "Hedonism",
+                "category": "values",
+                "percentage": 0.26583604531919625,
+                "sampling_error": 0.1416064234
+              },
+              {
+                "id": "Self-enhancement",
+                "name": "Self-enhancement",
+                "category": "values",
+                "percentage": 0.40722475452832607,
+                "sampling_error": 0.10717212549999999
+              },
+              {
+                "id": "Self-transcendence",
+                "name": "Self-transcendence",
+                "category": "values",
+                "percentage": 0.6254888863916034,
+                "sampling_error": 0.0852158275
+              }
+            ]
+          }
+        ]
       }
-   ]
+    ]
+  },
+  "id": "*UNKNOWN*",
+  "source": "*UNKNOWN*",
+  "word_count": 227,
+  "word_count_message": "There were 227 words in the input. We need a minimum of 600, preferably 1,200 or more, to compute statistically significant estimates",
+  "processed_lang": "en"
 }
