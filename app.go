@@ -41,7 +41,7 @@ func main() {
 		fmt.Println(err)
 	}
 
-	err = pi.LoadJsonProfile()
+	err = pi.LoadJsonAsProfile()
 	if err != nil {
 		fmt.Println(err)
 	}

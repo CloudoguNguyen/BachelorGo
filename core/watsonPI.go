@@ -38,7 +38,7 @@ func NewPersonalityInsight() (*WatsonPI, error) {
 
 }
 
-func (watson *WatsonPI) setProfile(pathToContent string) {
+func (watson *WatsonPI) updateProfileWithContent(pathToContent string) {
 	file, err := os.Open(pathToContent)
 	if err != nil {
 		fmt.Println(err)
@@ -92,7 +92,7 @@ func (watson *WatsonPI) SaveProfileAsJson() error {
 	return nil
 }
 
-func (watson *WatsonPI) LoadJsonProfile() error {
+func (watson *WatsonPI) LoadJsonAsProfile() error {
 	jsonFile, err := os.Open(profileSavePath)
 	// if we os.Open returns an error then handle it
 	if err != nil {

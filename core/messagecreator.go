@@ -29,3 +29,5 @@ func (creator *MessageCreator) Response(message string, conversationID string) s
 	}
 	return answer[0].Content
 }
+
+//ToDo add message into contents2.json
