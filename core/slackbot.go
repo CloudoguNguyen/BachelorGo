@@ -41,7 +41,7 @@ func (bot *SlackBot) Run() {
 			case *slack.MessageEvent:
 				fmt.Printf("Message: %v\n", event.Text)
 
-				bot.Respond(event)
+				bot.Respond(event, "1")
 
 			case *slack.RTMError:
 				fmt.Printf("Error: %s\n", event.Error())
@@ -55,11 +55,11 @@ func (bot *SlackBot) Run() {
 
 }
 
-func (bot *SlackBot) Respond(msg *slack.MessageEvent) {
+func (bot *SlackBot) Respond(msg *slack.MessageEvent, conversaionID string) {
 	var response string
 	text := msg.Text
 
-	response = bot.creator.Response(text)
+	response = bot.creator.Response(text, conversaionID)
 
 	bot.rtm.SendMessage(bot.rtm.NewOutgoingMessage(response, msg.Channel))
 

@@ -15,7 +15,7 @@ type RecastClient struct {
 	requestToken string
 }
 
-func NewRecast() *RecastClient {
+func NewRecastClient() *RecastClient {
 
 	return &RecastClient{requestToken: RequestToken}
 }
