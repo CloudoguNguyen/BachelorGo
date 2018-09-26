@@ -9,13 +9,15 @@ import (
 	"net/http"
 )
 
+const RequestToken = "2019b5440f2c880dd8ebfc7d2c26df31"
+
 type Recast struct {
 	requestToken string
 }
 
-func NewRecast(token string) *Recast {
+func NewRecast() *Recast {
 
-	return &Recast{requestToken: token}
+	return &Recast{requestToken: RequestToken}
 }
 
 func (recast *Recast) getResponseFromRecastServer(message string, conversationID string) (*http.Response, error) {

@@ -3,25 +3,35 @@ package core
 import (
 	"fmt"
 	"github.com/nlopes/slack"
-	"strings"
+	"github.com/pkg/errors"
 )
 
 type SlackBot struct {
-	token string
+	token   string
+	client  *slack.Client
+	rtm     *slack.RTM
+	creator *MessageCreator
 }
 
-func NewSlackBot() *SlackBot {
-	return &SlackBot{token: "xoxb-438453325860-438070557617-CviJFdimezMGe8FM04MwfO5a"}
+func NewSlackBot() (*SlackBot, error) {
+
+	token := "xoxb-438453325860-438070557617-CviJFdimezMGe8FM04MwfO5a"
+	client := slack.New(token)
+	rtm := client.NewRTM()
+	creator, err := NewMessageCreator()
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to create MessageCreator")
+	}
+
+	return &SlackBot{token: token, client: client, rtm: rtm}, nil
 }
 
 func (bot *SlackBot) Run() {
-	api := slack.New(bot.token)
-	//RTM = Real Time Messaging
-	rtm := api.NewRTM()
-	go rtm.ManageConnection()
+
+	go bot.rtm.ManageConnection()
 	for {
 		select {
-		case message := <-rtm.IncomingEvents:
+		case message := <-bot.rtm.IncomingEvents:
 			fmt.Print("Event Received: ")
 
 			switch event := message.Data.(type) {
@@ -30,10 +40,8 @@ func (bot *SlackBot) Run() {
 
 			case *slack.MessageEvent:
 				fmt.Printf("Message: %v\n", event.Text)
-				info := rtm.GetInfo()
-				prefix := fmt.Sprintf("<@%s> ", info.User.ID)
 
-				bot.Respond(rtm, event, prefix)
+				bot.Respond(event)
 
 			case *slack.RTMError:
 				fmt.Printf("Error: %s\n", event.Error())
@@ -47,16 +55,12 @@ func (bot *SlackBot) Run() {
 
 }
 
-func (bot *SlackBot) Respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string) {
+func (bot *SlackBot) Respond(msg *slack.MessageEvent) {
 	var response string
 	text := msg.Text
-	text = strings.TrimPrefix(text, prefix)
-	text = strings.TrimSpace(text)
-	text = strings.ToLower(text)
 
-	//whatever the user writes, say im working
+	response = bot.creator.Response(text)
 
-	response = "Im working"
-	rtm.SendMessage(rtm.NewOutgoingMessage(response, msg.Channel))
+	bot.rtm.SendMessage(bot.rtm.NewOutgoingMessage(response, msg.Channel))
 
 }
