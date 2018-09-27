@@ -20,7 +20,7 @@ func NewSlackBot() (*SlackBot, error) {
 	token := "xoxb-438453325860-438070557617-CviJFdimezMGe8FM04MwfO5a"
 	client := slack.New(token)
 	rtm := client.NewRTM()
-	creator, err := NewMessageCreator()
+	creator, err := NewMessageCreator("")
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to create MessageCreator")
 	}
@@ -64,7 +64,7 @@ func (bot *SlackBot) Respond(msg *slack.MessageEvent) {
 
 	if strings.ToLower(text) == "new conversation" {
 		newID := bot.resetConversation()
-		response = "new conversation started"
+		response = "new conversation with ID:" + newID
 
 		bot.conversationID = newID
 		bot.rtm.SendMessage(bot.rtm.NewOutgoingMessage(response, msg.Channel))

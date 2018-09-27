@@ -21,6 +21,24 @@ type Conversation struct {
 	SkillOccurences int    `json:"skill_occurences"`
 }
 
+type ContentItem struct {
+	Content     string `json:"content"`
+	Contenttype string `json:"contenttype"`
+	Language    string `json:"language"`
+}
+
+func newContentItem(message string) ContentItem {
+	return ContentItem{
+		Content:     message,
+		Contenttype: "text/plain",
+		Language:    "en",
+	}
+}
+
+type UserContents struct {
+	ContentItems []ContentItem
+}
+
 type RecastResponse struct {
 	Results struct {
 		Messages     []Message    `json:"messages"`

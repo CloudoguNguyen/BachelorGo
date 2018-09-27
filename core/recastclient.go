@@ -12,7 +12,14 @@ type RecastClient struct {
 	client *recast.RequestClient
 }
 
+const firstBotToken = "2019b5440f2c880dd8ebfc7d2c26df31"
+const secondBotToken = "e16b673cc84ab7b5d490115dedfe7d71"
+
 func NewRecastClient(token string) *RecastClient {
+
+	if token == "" {
+		token = secondBotToken
+	}
 
 	client := recast.RequestClient{Token: token, Language: "en"}
 
@@ -52,7 +59,7 @@ func newRandomConversationID() string {
 
 	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
 
-	b := make([]rune, 20)
+	b := make([]rune, 5)
 	for i := range b {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
