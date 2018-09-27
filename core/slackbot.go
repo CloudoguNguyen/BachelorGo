@@ -55,11 +55,11 @@ func (bot *SlackBot) Run() {
 
 }
 
-func (bot *SlackBot) Respond(msg *slack.MessageEvent, conversaionID string) {
+func (bot *SlackBot) Respond(msg *slack.MessageEvent, conversationID string) {
 	var response string
 	text := msg.Text
 
-	response = bot.creator.Response(text, conversaionID)
+	response = bot.creator.Response(text, conversationID)
 
 	bot.rtm.SendMessage(bot.rtm.NewOutgoingMessage(response, msg.Channel))
 

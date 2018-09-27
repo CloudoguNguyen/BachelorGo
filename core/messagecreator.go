@@ -10,13 +10,16 @@ type MessageCreator struct {
 	recast   *RecastClient
 }
 
+const firstBotToken = "2019b5440f2c880dd8ebfc7d2c26df31"
+const secondBotToken = "e16b673cc84ab7b5d490115dedfe7d71"
+
 func NewMessageCreator() (*MessageCreator, error) {
 
 	pi, err := NewPersonalityInsight()
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to create watson PI")
 	}
-	recastClient := NewRecastClient()
+	recastClient := NewRecastClient(secondBotToken)
 
 	return &MessageCreator{pi, recastClient}, nil
 }

@@ -2,7 +2,6 @@ package core
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/liviosoares/go-watson-sdk/watson"
 	"github.com/liviosoares/go-watson-sdk/watson/personality_insights"
 	"github.com/pkg/errors"
@@ -37,16 +36,18 @@ func NewPersonalityInsight() (*WatsonPI, error) {
 
 }
 
-func (watson *WatsonPI) updateProfileWithContent(pathToContent string) {
+func (watson *WatsonPI) updateProfileWithContent(pathToContent string) error {
 	file, err := os.Open(pathToContent)
 	if err != nil {
-		fmt.Println(err)
+		return errors.Wrapf(err, "failed to open %s", pathToContent)
 	}
 	profile, err := watson.Client.GetProfile(file, "application/json", "en")
 	if err != nil {
-		fmt.Println(err)
+		return errors.Wrapf(err, "failed to parse json profile")
 	}
 	watson.Profile = profile
+
+	return nil
 }
 
 func (watson *WatsonPI) GetAggreeableness() personality_insights.TraitTree {
@@ -73,8 +74,8 @@ func (watson *WatsonPI) GetEmotionalStability() personality_insights.TraitTree {
 	return value
 }
 
-func (watson *WatsonPI) SaveProfileAsJson() error {
-	fo, err := os.Create(profileSavePath)
+func (watson *WatsonPI) SaveProfileAsJson(path string) error {
+	fo, err := os.Create(path)
 	if err != nil {
 		return errors.Wrapf(err, "failed to create Profile save path")
 	}
@@ -89,17 +90,17 @@ func (watson *WatsonPI) SaveProfileAsJson() error {
 	return nil
 }
 
-func (watson *WatsonPI) LoadJsonAsProfile() error {
-	jsonFile, err := os.Open(profileSavePath)
+func (watson *WatsonPI) LoadJsonAsProfile(path string) error {
+	jsonFile, err := os.Open(path)
 	// if we os.Open returns an error then handle it
 	if err != nil {
-		return errors.Wrapf(err, "failed to read %s", profileSavePath)
+		return errors.Wrapf(err, "failed to read %s", path)
 	}
 	defer jsonFile.Close()
 
 	byteValue, err := ioutil.ReadAll(jsonFile)
 	if err != nil {
-		return errors.Wrapf(err, "failed to load %s into Json", profileSavePath)
+		return errors.Wrapf(err, "failed to load %s into Json", path)
 	}
 	json.Unmarshal(byteValue, &watson.Profile)
 

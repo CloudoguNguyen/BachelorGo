@@ -6,16 +6,13 @@ import (
 	"github.com/pkg/errors"
 )
 
-const firstBotToken = "2019b5440f2c880dd8ebfc7d2c26df31"
-const secondBotToken = "e16b673cc84ab7b5d490115dedfe7d71"
-
 type RecastClient struct {
 	client *recast.RequestClient
 }
 
-func NewRecastClient() *RecastClient {
+func NewRecastClient(token string) *RecastClient {
 
-	client := recast.RequestClient{Token: firstBotToken, Language: "en"}
+	client := recast.RequestClient{Token: token, Language: "en"}
 
 	return &RecastClient{client: &client}
 }
