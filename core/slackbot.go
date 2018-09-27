@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"github.com/nlopes/slack"
 	"github.com/pkg/errors"
+	"strings"
 )
 
 type SlackBot struct {
-	token   string
-	client  *slack.Client
-	rtm     *slack.RTM
-	creator *MessageCreator
+	token          string
+	client         *slack.Client
+	rtm            *slack.RTM
+	creator        *MessageCreator
+	conversationID string
 }
 
 func NewSlackBot() (*SlackBot, error) {
@@ -23,7 +25,7 @@ func NewSlackBot() (*SlackBot, error) {
 		return nil, errors.Wrapf(err, "failed to create MessageCreator")
 	}
 
-	return &SlackBot{token: token, client: client, rtm: rtm, creator: creator}, nil
+	return &SlackBot{token: token, client: client, rtm: rtm, creator: creator, conversationID: "1"}, nil
 }
 
 func (bot *SlackBot) Run() {
@@ -41,7 +43,7 @@ func (bot *SlackBot) Run() {
 			case *slack.MessageEvent:
 				fmt.Printf("Message: %v\n", event.Text)
 
-				bot.Respond(event, "1")
+				bot.Respond(event)
 
 			case *slack.RTMError:
 				fmt.Printf("Error: %s\n", event.Error())
@@ -55,12 +57,33 @@ func (bot *SlackBot) Run() {
 
 }
 
-func (bot *SlackBot) Respond(msg *slack.MessageEvent, conversationID string) {
-	var response string
+func (bot *SlackBot) Respond(msg *slack.MessageEvent) {
+
+	response := ""
 	text := msg.Text
 
-	response = bot.creator.Response(text, conversationID)
+	if strings.ToLower(text) == "new conversation" {
+		newID := bot.resetConversation()
+		response = "new conversation started"
+
+		bot.conversationID = newID
+		bot.rtm.SendMessage(bot.rtm.NewOutgoingMessage(response, msg.Channel))
+
+		return
+	}
+
+	response, err := bot.creator.Response(text, bot.conversationID)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	bot.rtm.SendMessage(bot.rtm.NewOutgoingMessage(response, msg.Channel))
 
+}
+
+func (bot *SlackBot) resetConversation() string {
+
+	newID := bot.creator.NewConversationID()
+
+	return newID
 }

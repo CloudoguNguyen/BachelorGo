@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"github.com/pkg/errors"
 )
 
@@ -24,13 +23,20 @@ func NewMessageCreator() (*MessageCreator, error) {
 	return &MessageCreator{pi, recastClient}, nil
 }
 
-func (creator *MessageCreator) Response(message string, conversationID string) string {
+func (creator *MessageCreator) Response(message string, conversationID string) (string, error) {
 
 	answer, err := creator.recast.GetReplies(message, conversationID)
 	if err != nil {
-		fmt.Println(err)
+		return "", errors.Wrapf(err, "failed to get reply with the messsage %s", message)
 	}
-	return answer
+	return answer, nil
+}
+
+func (creator *MessageCreator) NewConversationID() string {
+
+	newID := creator.recast.getNewConversationID()
+
+	return newID
 }
 
 //ToDo add message into contents2.json
