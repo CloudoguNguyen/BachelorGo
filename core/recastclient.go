@@ -18,7 +18,7 @@ const secondBotToken = "e16b673cc84ab7b5d490115dedfe7d71"
 func NewRecastClient(token string) *RecastClient {
 
 	if token == "" {
-		token = secondBotToken
+		token = firstBotToken
 	}
 
 	client := recast.RequestClient{Token: token, Language: "en"}
@@ -44,8 +44,13 @@ func (rc *RecastClient) GetReplies(message string, conversationID string) (strin
 func convertMessageToString(message recast.Component) string {
 
 	stringMessage := fmt.Sprintf("%v", message)
-	stringMessage = stringMessage[7 : len(stringMessage)-1]
-	return stringMessage
+	if len(stringMessage) > 0 {
+		stringMessage = stringMessage[7 : len(stringMessage)-1]
+		return stringMessage
+
+	}
+
+	return "I don't understand it yet"
 
 }
 

@@ -64,7 +64,7 @@ func (creator *MessageCreator) addMessageIntoJson(message string, conversationID
 	}
 
 	contentItem := newContentItem(message)
-	userContent.ContentItems = append(userContent.ContentItems, contentItem)
+	userContent.contentItems = append(userContent.contentItems, contentItem)
 
 	err = creator.saveUserContentsToJson(path, userContent)
 	if err != nil {
