@@ -23,11 +23,11 @@ func NewMessageCreator() (*MessageCreator, error) {
 
 func (creator *MessageCreator) Response(message string, conversationID string) string {
 
-	answer, err := creator.recast.GetNextAnswer(message, conversationID)
+	answer, err := creator.recast.GetReplies(message, conversationID)
 	if err != nil {
 		fmt.Println(err)
 	}
-	return answer[0].Content
+	return answer
 }
 
 //ToDo add message into contents2.json

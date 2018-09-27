@@ -33,7 +33,6 @@ func NewPersonalityInsight() (*WatsonPI, error) {
 	}
 
 	var profile personality_insights.Profile
-
 	return &WatsonPI{client, profile}, nil
 
 }
@@ -47,32 +46,30 @@ func (watson *WatsonPI) updateProfileWithContent(pathToContent string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-
 	watson.Profile = profile
 }
 
-func GetAggreeableness(profile personality_insights.Profile) personality_insights.TraitTree {
+func (watson *WatsonPI) GetAggreeableness() personality_insights.TraitTree {
 
-	value := profile.Tree.Children[0].Children[0].Children[3]
-	return value
-
-}
-
-func GetConscientiousness(profile personality_insights.Profile) personality_insights.TraitTree {
-	value := profile.Tree.Children[0].Children[0].Children[1]
+	value := watson.Profile.Tree.Children[0].Children[0].Children[3]
 	return value
 }
 
-func GetOpenness(profile personality_insights.Profile) personality_insights.TraitTree {
-	value := profile.Tree.Children[0].Children[0].Children[0]
+func (watson *WatsonPI) GetConscientiousness() personality_insights.TraitTree {
+	value := watson.Profile.Tree.Children[0].Children[0].Children[1]
 	return value
 }
-func GetExtraversion(profile personality_insights.Profile) personality_insights.TraitTree {
-	value := profile.Tree.Children[0].Children[0].Children[2]
+
+func (watson *WatsonPI) GetOpenness() personality_insights.TraitTree {
+	value := watson.Profile.Tree.Children[0].Children[0].Children[0]
 	return value
 }
-func GetEmotionalStability(profile personality_insights.Profile) personality_insights.TraitTree {
-	value := profile.Tree.Children[0].Children[0].Children[4]
+func (watson *WatsonPI) GetExtraversion() personality_insights.TraitTree {
+	value := watson.Profile.Tree.Children[0].Children[0].Children[2]
+	return value
+}
+func (watson *WatsonPI) GetEmotionalStability() personality_insights.TraitTree {
+	value := watson.Profile.Tree.Children[0].Children[0].Children[4]
 	return value
 }
 

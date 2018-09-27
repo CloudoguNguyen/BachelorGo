@@ -2,12 +2,12 @@
 
 
 [[projects]]
-  digest = "1:9e9a4347381ace1f9d44a3141051c7e8a45dbac7e214329018dd1135630d8992"
+  branch = "master"
+  digest = "1:46ffc73ef6718d031c1414d806214fb08accec22b06d28c810d6778189c647be"
   name = "github.com/RecastAI/SDK-Golang"
   packages = ["recast"]
   pruneopts = "UT"
-  revision = "72db5fff5ff8ed118b5bfe112b3939915c2b6d6a"
-  version = "3.2.0"
+  revision = "a7eead206323f630aa4bc32db037c56c118f8c82"
 
 [[projects]]
   digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"

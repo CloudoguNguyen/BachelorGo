@@ -1,74 +1,46 @@
 package core
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
+	"github.com/RecastAI/SDK-Golang/recast"
 	"github.com/pkg/errors"
-	"io/ioutil"
-	"net/http"
 )
 
-const RequestToken = "2019b5440f2c880dd8ebfc7d2c26df31"
+const firstBotToken = "2019b5440f2c880dd8ebfc7d2c26df31"
+const secondBotToken = "e16b673cc84ab7b5d490115dedfe7d71"
 
 type RecastClient struct {
-	requestToken string
+	client *recast.RequestClient
 }
 
 func NewRecastClient() *RecastClient {
 
-	return &RecastClient{requestToken: RequestToken}
+	client := recast.RequestClient{Token: firstBotToken, Language: "en"}
+
+	return &RecastClient{client: &client}
 }
 
-func (recast *RecastClient) getResponseFromRecastServer(message string, conversationID string) (*http.Response, error) {
-	m := Message{
-		Content: message,
-		Type:    "text",
-	}
-	data := Payload{
-		Message:        m,
-		ConversationID: conversationID,
-	}
+func (rc *RecastClient) GetReplies(message string, conversationID string) (string, error) {
 
-	payloadBytes, err := json.Marshal(data)
+	ops := recast.DialogOpts{Language: "en", ConversationId: conversationID}
+
+	response, err := rc.client.DialogText(message, &ops)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to marshal %s", data)
-	}
-	body := bytes.NewReader(payloadBytes)
-
-	req, err := http.NewRequest("POST", "https://api.recast.ai/build/v1/dialog", body)
-	if err != nil {
-		return nil, errors.Wrapf(err, "failed to POST to recast.ai website")
-	}
-	req.Header.Set("Authorization", "Token "+recast.requestToken)
-	req.Header.Set("Content-Type", "application/json")
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return nil, errors.Wrapf(err, "failed to execute the request")
+		return "", errors.Wrapf(err, "failed to converse text %s", message)
 	}
 
-	return resp, nil
+	answer := convertMessageToString(response.Messages[0])
+
+	return answer, nil
+
 }
 
-func (recast *RecastClient) GetNextAnswer(message string, conversationID string) ([]Message, error) {
+func convertMessageToString(message recast.Component) string {
 
-	resp, err := recast.getResponseFromRecastServer(message, conversationID)
-	if err != nil {
-		fmt.Println(err)
-	}
-	var answerFromRecast RecastResponse
+	stringMessage := fmt.Sprintf("%v", message)
 
-	byteBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println(err)
-	}
+	stringMessage = stringMessage[7 : len(stringMessage)-1]
 
-	err = json.Unmarshal(byteBody, &answerFromRecast)
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer resp.Body.Close()
+	return stringMessage
 
-	return answerFromRecast.Results.Messages, nil
 }

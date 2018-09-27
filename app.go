@@ -1,27 +1,30 @@
 package main
 
-import (
-	"fmt"
-	"github.com/cloudogu/BachelorGo/core"
-)
-
-const TOKEN = "fca33d727f5037db12c6039a7efd5d9b"
-
 func main() {
 	/*
-			re := core.NewRecastClient()
-			answer, err := re.GetNextAnswer("tell me a joke", "1")
+			bot, err := core.NewSlackBot()
 			if err != nil {
 				fmt.Println(err)
 			}
-			fmt.Println(answer[0].Content)
+			bot.Run()
+					}
 
-		bot, err := core.NewSlackBot()
+	re := core.NewRecastClient()
+
+		answer, err := re.GetReplies("Tell me a joke", "1")
 		if err != nil {
 			fmt.Println(err)
 		}
-		bot.Run()
-				}
+	 	fmt.Println(answer)
+		pi, err := core.NewPersonalityInsight()
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		err = pi.LoadJsonAsProfile()
+		if err != nil {
+			fmt.Println(err)
+		}
 	*/
 	/*
 
@@ -35,17 +38,5 @@ func main() {
 
 		}
 	*/
-
-	pi, err := core.NewPersonalityInsight()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	err = pi.LoadJsonAsProfile()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Println(core.GetOpenness(pi.Profile))
 
 }
