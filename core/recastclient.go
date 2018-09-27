@@ -35,22 +35,21 @@ func (rc *RecastClient) GetReplies(message string, conversationID string) (strin
 		return "", errors.Wrapf(err, "failed to converse text %s", message)
 	}
 
-	answer := convertMessageToString(response.Messages[0])
+	if len(response.Messages) > 0 {
+		answer := convertMessageToString(response.Messages[0])
+		return answer, nil
+	}
 
-	return answer, nil
+	return "I dont understand it yet", nil
 
 }
 
 func convertMessageToString(message recast.Component) string {
 
 	stringMessage := fmt.Sprintf("%v", message)
-	if len(stringMessage) > 0 {
-		stringMessage = stringMessage[7 : len(stringMessage)-1]
-		return stringMessage
+	stringMessage = stringMessage[7 : len(stringMessage)-1]
 
-	}
-
-	return "I don't understand it yet"
+	return stringMessage
 
 }
 
