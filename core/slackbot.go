@@ -62,13 +62,20 @@ func (bot *SlackBot) Respond(msg *slack.MessageEvent) {
 	response := ""
 	text := msg.Text
 
-	if strings.ToLower(text) == "new conversation" {
-		newID := bot.resetConversation()
-		response = "new conversation with ID:" + newID
+	if strings.ToLower(text) == "%new" {
 
-		bot.conversationID = newID
+		bot.conversationID = bot.getNewConversationID()
+		response = "new conversation with ID:" + bot.conversationID
+
 		bot.rtm.SendMessage(bot.rtm.NewOutgoingMessage(response, msg.Channel))
+		return
 
+	} else if strings.Contains(strings.ToLower(text), "%switch") {
+
+		bot.conversationID = bot.getConversationID(text)
+		response = "switch to conversation with ID:" + bot.conversationID
+
+		bot.rtm.SendMessage(bot.rtm.NewOutgoingMessage(response, msg.Channel))
 		return
 	}
 
@@ -78,12 +85,15 @@ func (bot *SlackBot) Respond(msg *slack.MessageEvent) {
 	}
 
 	bot.rtm.SendMessage(bot.rtm.NewOutgoingMessage(response, msg.Channel))
-
 }
 
-func (bot *SlackBot) resetConversation() string {
-
+func (bot *SlackBot) getNewConversationID() string {
 	newID := bot.creator.NewConversationID()
-
 	return newID
+}
+
+func (bot *SlackBot) getConversationID(text string) string {
+	values := strings.Split(text, ":")
+	convID := strings.TrimSpace(values[1])
+	return convID
 }
