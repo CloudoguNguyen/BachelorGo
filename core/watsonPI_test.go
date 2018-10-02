@@ -1,7 +1,9 @@
 package core
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
+	"strings"
 	"testing"
 )
 
@@ -38,4 +40,18 @@ func TestSaveAndLoadProfileAsJson(t *testing.T) {
 
 	assert.True(t, expected > 1, expected)
 
+}
+
+func TestProfileAsString(t *testing.T) {
+
+	pi, err := NewPersonalityInsight()
+	assert.Nil(t, err)
+
+	err = pi.updateProfileWithContent("../resources/test/contents.json")
+	assert.Nil(t, err)
+
+	result := pi.GetProfileAsString()
+	fmt.Println(result)
+
+	assert.True(t, strings.Contains(result, "extraversion 94"))
 }

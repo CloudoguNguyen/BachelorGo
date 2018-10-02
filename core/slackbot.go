@@ -8,10 +8,10 @@ import (
 )
 
 type SlackBot struct {
-	token          string
+	slackToken     string
 	client         *slack.Client
 	rtm            *slack.RTM
-	creator        *MessageCreator
+	creator        *MessageManager
 	conversationID string
 }
 
@@ -22,10 +22,10 @@ func NewSlackBot() (*SlackBot, error) {
 	rtm := client.NewRTM()
 	creator, err := NewMessageCreator("")
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to create MessageCreator")
+		return nil, errors.Wrapf(err, "failed to create MessageManager")
 	}
 
-	return &SlackBot{token: token, client: client, rtm: rtm, creator: creator, conversationID: "1"}, nil
+	return &SlackBot{slackToken: token, client: client, rtm: rtm, creator: creator, conversationID: "1"}, nil
 }
 
 func (bot *SlackBot) Run() {
@@ -68,6 +68,13 @@ func (bot *SlackBot) Respond(msg *slack.MessageEvent) {
 		response = "new conversation with ID:" + bot.conversationID
 
 		bot.rtm.SendMessage(bot.rtm.NewOutgoingMessage(response, msg.Channel))
+
+		newCreator, err := NewMessageCreator("")
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		bot.creator = newCreator
 		return
 
 	} else if strings.Contains(strings.ToLower(text), "%switch") {

@@ -2,14 +2,14 @@ package core
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/liviosoares/go-watson-sdk/watson"
 	"github.com/liviosoares/go-watson-sdk/watson/personality_insights"
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"os"
+	"strconv"
 )
-
-const profileSavePath = "/home/tnguyen/GolandProjects/src/github.com/cloudogu/BachelorGo/resources/profile.json"
 
 type WatsonPI struct {
 	Client  personality_insights.Client
@@ -50,9 +50,8 @@ func (watson *WatsonPI) updateProfileWithContent(pathToContent string) error {
 	return nil
 }
 
-func (watson *WatsonPI) GetAgreeablenessValue() int {
-
-	value := watson.Profile.Tree.Children[0].Children[0].Children[3]
+func (watson *WatsonPI) GetOpennessValue() int {
+	value := watson.Profile.Tree.Children[0].Children[0].Children[0]
 	intValue := int(value.Percentage * 100)
 	return intValue
 }
@@ -63,11 +62,13 @@ func (watson *WatsonPI) GetConscientiousnessValue() int {
 	return intValue
 }
 
-func (watson *WatsonPI) GetOpennessValue() int {
-	value := watson.Profile.Tree.Children[0].Children[0].Children[0]
+func (watson *WatsonPI) GetAgreeablenessValue() int {
+
+	value := watson.Profile.Tree.Children[0].Children[0].Children[3]
 	intValue := int(value.Percentage * 100)
 	return intValue
 }
+
 func (watson *WatsonPI) GetExtraversionValue() int {
 	value := watson.Profile.Tree.Children[0].Children[0].Children[2]
 	intValue := int(value.Percentage * 100)
@@ -77,6 +78,20 @@ func (watson *WatsonPI) GetNeuroticismValue() int {
 	value := watson.Profile.Tree.Children[0].Children[0].Children[4]
 	intValue := int(value.Percentage * 100)
 	return intValue
+}
+
+func (watson *WatsonPI) GetProfileAsString() string {
+	traits := []string{"openness", "conscientiousness", "agreeableness", "extraversion", "neuroticism"}
+	var result string
+
+	for index, value := range traits {
+
+		traitValue := int(watson.Profile.Tree.Children[0].Children[0].Children[index].Percentage * 100)
+
+		result += fmt.Sprintf("%s %s; ", value, strconv.Itoa(traitValue))
+	}
+
+	return result
 }
 
 func (watson *WatsonPI) SaveProfileAsJson(path string) error {

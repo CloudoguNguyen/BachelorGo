@@ -18,7 +18,7 @@ const secondBotToken = "e16b673cc84ab7b5d490115dedfe7d71"
 func NewRecastClient(token string) *RecastClient {
 
 	if token == "" {
-		token = firstBotToken
+		token = secondBotToken
 	}
 
 	client := recast.RequestClient{Token: token, Language: "en"}

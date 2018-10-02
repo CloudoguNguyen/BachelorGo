@@ -6,52 +6,66 @@ import (
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"os"
+	"strconv"
+	"strings"
 )
 
-type MessageCreator struct {
-	watsonPI *WatsonPI
-	recast   *RecastClient
+type MessageManager struct {
+	watsonPI    *WatsonPI
+	recast      *RecastClient
+	enoughWords bool
 }
 
-func NewMessageCreator(token string) (*MessageCreator, error) {
+func NewMessageCreator(recastToken string) (*MessageManager, error) {
 
-	pi, err := NewPersonalityInsight()
+	watsonPI, err := NewPersonalityInsight()
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to create watson PI")
 	}
-	recastClient := NewRecastClient(token)
+	recastClient := NewRecastClient(recastToken)
 
-	return &MessageCreator{pi, recastClient}, nil
+	return &MessageManager{watsonPI, recastClient, true}, nil
 }
 
 //ToDo make watson read it
 
-func (creator *MessageCreator) Response(message string, conversationID string) (string, error) {
+func (manager *MessageManager) Response(message string, conversationID string) (string, error) {
 
 	path := "resources/" + conversationID + ".json"
 
-	err := creator.addMessageIntoJson(message, path)
+	err := manager.addMessageIntoConversationJson(message, path)
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to add message to json with %s", conversationID)
 	}
 
-	fmt.Printf("added %s to json", message)
-
-	err = creator.watsonPI.updateProfileWithContent(path)
+	err = manager.watsonPI.updateProfileWithContent(path)
 	if err != nil {
-		return "", errors.Wrapf(err, "failed to add message to json with %s", conversationID)
+		if strings.Contains(err.Error(), "less than the minimum number of words required") {
+			manager.enoughWords = false
+			return "We need atleast 100 words from you to analyse your personality, please tell us more about you", nil
+		}
+		return "", errors.Wrapf(err, "failed update profile in conversation %s", conversationID)
 	}
 
-	answer, err := creator.recast.GetReplies(message, conversationID)
+	if manager.enoughWords == false {
+		manager.enoughWords = true
+		return "We have enough words from you now, please tell us what you want", nil
+	}
+
+	fmt.Println(manager.watsonPI.GetProfileAsString())
+	messageForRecast := message + " extraversion " + strconv.Itoa(manager.watsonPI.GetExtraversionValue())
+	fmt.Println("Message to recast: " + messageForRecast)
+
+	answer, err := manager.recast.GetReplies(messageForRecast, conversationID)
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to get reply with the messsage %s", message)
 	}
 	return answer, nil
 }
 
-func (creator *MessageCreator) NewConversationID() string {
+func (manager *MessageManager) NewConversationID() string {
 
-	newID := creator.recast.getNewConversationID()
+	newID := manager.recast.getNewConversationID()
 
 	return newID
 }
@@ -63,10 +77,10 @@ func (creator *MessageCreator) NewConversationID() string {
 4. Delete old Json file
 5. Save new userContent into new JsonFile
 */
-func (creator *MessageCreator) addMessageIntoJson(message string, jsonPath string) error {
+func (manager *MessageManager) addMessageIntoConversationJson(message string, jsonPath string) error {
 
 	userContent := UserContents{}
-	err := creator.loadJsonToUserContent(jsonPath, &userContent)
+	err := manager.loadJsonToUserContent(jsonPath, &userContent)
 	if err != nil {
 		return errors.Wrapf(err, "failed to load user content %s", jsonPath)
 	}
@@ -74,7 +88,7 @@ func (creator *MessageCreator) addMessageIntoJson(message string, jsonPath strin
 	contentItem := newContentItem(message)
 	userContent.ContentItems = append(userContent.ContentItems, contentItem)
 
-	err = creator.saveUserContentsToJson(jsonPath, &userContent)
+	err = manager.saveUserContentsToJson(jsonPath, &userContent)
 	if err != nil {
 		return errors.Wrapf(err, "failed to save user content %s", jsonPath)
 	}
@@ -83,7 +97,7 @@ func (creator *MessageCreator) addMessageIntoJson(message string, jsonPath strin
 
 }
 
-func (creator *MessageCreator) loadJsonToUserContent(path string, content *UserContents) error {
+func (manager *MessageManager) loadJsonToUserContent(path string, content *UserContents) error {
 
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 
@@ -120,7 +134,7 @@ func (creator *MessageCreator) loadJsonToUserContent(path string, content *UserC
 
 }
 
-func (creator *MessageCreator) saveUserContentsToJson(path string, userContent *UserContents) error {
+func (manager *MessageManager) saveUserContentsToJson(path string, userContent *UserContents) error {
 
 	os.Remove(path)
 
