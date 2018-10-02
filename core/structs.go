@@ -36,7 +36,7 @@ func newContentItem(message string) ContentItem {
 }
 
 type UserContents struct {
-	contentItems []ContentItem
+	ContentItems []ContentItem `json:"contentItems"`
 }
 
 type RecastResponse struct {

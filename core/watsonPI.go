@@ -50,28 +50,33 @@ func (watson *WatsonPI) updateProfileWithContent(pathToContent string) error {
 	return nil
 }
 
-func (watson *WatsonPI) GetAggreeableness() personality_insights.TraitTree {
+func (watson *WatsonPI) GetAgreeablenessValue() int {
 
 	value := watson.Profile.Tree.Children[0].Children[0].Children[3]
-	return value
+	intValue := int(value.Percentage * 100)
+	return intValue
 }
 
-func (watson *WatsonPI) GetConscientiousness() personality_insights.TraitTree {
+func (watson *WatsonPI) GetConscientiousnessValue() int {
 	value := watson.Profile.Tree.Children[0].Children[0].Children[1]
-	return value
+	intValue := int(value.Percentage * 100)
+	return intValue
 }
 
-func (watson *WatsonPI) GetOpenness() personality_insights.TraitTree {
+func (watson *WatsonPI) GetOpennessValue() int {
 	value := watson.Profile.Tree.Children[0].Children[0].Children[0]
-	return value
+	intValue := int(value.Percentage * 100)
+	return intValue
 }
-func (watson *WatsonPI) GetExtraversion() personality_insights.TraitTree {
+func (watson *WatsonPI) GetExtraversionValue() int {
 	value := watson.Profile.Tree.Children[0].Children[0].Children[2]
-	return value
+	intValue := int(value.Percentage * 100)
+	return intValue
 }
-func (watson *WatsonPI) GetEmotionalStability() personality_insights.TraitTree {
+func (watson *WatsonPI) GetNeuroticismValue() int {
 	value := watson.Profile.Tree.Children[0].Children[0].Children[4]
-	return value
+	intValue := int(value.Percentage * 100)
+	return intValue
 }
 
 func (watson *WatsonPI) SaveProfileAsJson(path string) error {

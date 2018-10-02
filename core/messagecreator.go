@@ -2,6 +2,7 @@ package core
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"os"
@@ -27,7 +28,16 @@ func NewMessageCreator(token string) (*MessageCreator, error) {
 
 func (creator *MessageCreator) Response(message string, conversationID string) (string, error) {
 
-	err := creator.addMessageIntoJson(message, conversationID)
+	path := "resources/" + conversationID + ".json"
+
+	err := creator.addMessageIntoJson(message, path)
+	if err != nil {
+		return "", errors.Wrapf(err, "failed to add message to json with %s", conversationID)
+	}
+
+	fmt.Printf("added %s to json", message)
+
+	err = creator.watsonPI.updateProfileWithContent(path)
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to add message to json with %s", conversationID)
 	}
@@ -53,22 +63,20 @@ func (creator *MessageCreator) NewConversationID() string {
 4. Delete old Json file
 5. Save new userContent into new JsonFile
 */
-func (creator *MessageCreator) addMessageIntoJson(message string, conversationID string) error {
-
-	path := "resources/" + conversationID + ".json"
+func (creator *MessageCreator) addMessageIntoJson(message string, jsonPath string) error {
 
 	userContent := UserContents{}
-	err := creator.loadJsonToUserContent(path, &userContent)
+	err := creator.loadJsonToUserContent(jsonPath, &userContent)
 	if err != nil {
-		return errors.Wrapf(err, "failed to load user content %s", path)
+		return errors.Wrapf(err, "failed to load user content %s", jsonPath)
 	}
 
 	contentItem := newContentItem(message)
-	userContent.contentItems = append(userContent.contentItems, contentItem)
+	userContent.ContentItems = append(userContent.ContentItems, contentItem)
 
-	err = creator.saveUserContentsToJson(path, userContent)
+	err = creator.saveUserContentsToJson(jsonPath, &userContent)
 	if err != nil {
-		return errors.Wrapf(err, "failed to save user content %s", path)
+		return errors.Wrapf(err, "failed to save user content %s", jsonPath)
 	}
 
 	return nil
@@ -78,6 +86,7 @@ func (creator *MessageCreator) addMessageIntoJson(message string, conversationID
 func (creator *MessageCreator) loadJsonToUserContent(path string, content *UserContents) error {
 
 	if _, err := os.Stat(path); os.IsNotExist(err) {
+
 		// If file doenst exist
 		jsonFile, err := os.Create(path)
 		if err != nil {
@@ -111,13 +120,13 @@ func (creator *MessageCreator) loadJsonToUserContent(path string, content *UserC
 
 }
 
-func (creator *MessageCreator) saveUserContentsToJson(path string, userContent UserContents) error {
+func (creator *MessageCreator) saveUserContentsToJson(path string, userContent *UserContents) error {
 
 	os.Remove(path)
 
-	fo, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE, 0666)
+	fo, err := os.Create(path)
 	if err != nil {
-		return errors.Wrapf(err, "failed to create path %s", path)
+		return errors.Wrapf(err, "failed to create Profile save path")
 	}
 
 	defer fo.Close()
@@ -125,7 +134,8 @@ func (creator *MessageCreator) saveUserContentsToJson(path string, userContent U
 
 	err = encoder.Encode(userContent)
 	if err != nil {
-		return errors.Wrapf(err, "failed to encode")
+		return errors.Wrapf(err, "failed to create encode")
 	}
+
 	return nil
 }
