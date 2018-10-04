@@ -12,7 +12,7 @@ func TestUpdateProfileWIthContent(t *testing.T) {
 	pi, err := NewPersonalityInsight()
 	assert.Nil(t, err)
 
-	err = pi.updateProfileWithContent("../resources/test/contents.json")
+	err = pi.UpdateProfileWithContent("../resources/test/contents.json")
 	assert.Nil(t, err)
 
 	value := pi.GetConscientiousnessValue()
@@ -27,7 +27,7 @@ func TestSaveAndLoadProfileAsJson(t *testing.T) {
 	pi, err := NewPersonalityInsight()
 	assert.Nil(t, err)
 
-	err = pi.updateProfileWithContent("../resources/test/contents.json")
+	err = pi.UpdateProfileWithContent("../resources/test/contents.json")
 	assert.Nil(t, err)
 
 	err = pi.SaveProfileAsJson(path)
@@ -47,10 +47,10 @@ func TestProfileAsString(t *testing.T) {
 	pi, err := NewPersonalityInsight()
 	assert.Nil(t, err)
 
-	err = pi.updateProfileWithContent("../resources/test/contents.json")
+	err = pi.UpdateProfileWithContent("../resources/test/contents.json")
 	assert.Nil(t, err)
 
-	result := pi.GetProfileAsString()
+	result := pi.ProfileAsString()
 	fmt.Println(result)
 
 	assert.True(t, strings.Contains(result, "extraversion 94"))

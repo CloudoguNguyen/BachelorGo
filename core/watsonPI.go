@@ -36,7 +36,7 @@ func NewPersonalityInsight() (*WatsonPI, error) {
 
 }
 
-func (watson *WatsonPI) updateProfileWithContent(pathToContent string) error {
+func (watson *WatsonPI) UpdateProfileWithContent(pathToContent string) error {
 	file, err := os.Open(pathToContent)
 	if err != nil {
 		return errors.Wrapf(err, "failed to open %s", pathToContent)
@@ -74,23 +74,21 @@ func (watson *WatsonPI) GetExtraversionValue() int {
 	intValue := int(value.Percentage * 100)
 	return intValue
 }
+
 func (watson *WatsonPI) GetNeuroticismValue() int {
 	value := watson.Profile.Tree.Children[0].Children[0].Children[4]
 	intValue := int(value.Percentage * 100)
 	return intValue
 }
 
-func (watson *WatsonPI) GetProfileAsString() string {
-	traits := []string{"openness", "conscientiousness", "agreeableness", "extraversion", "neuroticism"}
+func (watson *WatsonPI) ProfileAsString() string {
+	traits := []string{"openness", "conscientiousness", "extraverion", "agreeableness", "neuroticism"}
 	var result string
 
 	for index, value := range traits {
-
 		traitValue := int(watson.Profile.Tree.Children[0].Children[0].Children[index].Percentage * 100)
-
 		result += fmt.Sprintf("%s %s; ", value, strconv.Itoa(traitValue))
 	}
-
 	return result
 }
 

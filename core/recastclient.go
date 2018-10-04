@@ -35,12 +35,13 @@ func (rc *RecastClient) GetReplies(message string, conversationID string) (strin
 		return "", errors.Wrapf(err, "failed to converse text %s", message)
 	}
 
-	if len(response.Messages) > 0 {
-		answer := convertMessageToString(response.Messages[0])
-		return answer, nil
-	}
+	answer := ""
+	for _, message := range response.Messages {
 
-	return "I dont understand it yet", nil
+		fmt.Println(message)
+		answer += convertMessageToString(message) + "\n"
+	}
+	return answer, nil
 
 }
 
@@ -48,17 +49,10 @@ func convertMessageToString(message recast.Component) string {
 
 	stringMessage := fmt.Sprintf("%v", message)
 	stringMessage = stringMessage[7 : len(stringMessage)-1]
-
 	return stringMessage
-
 }
 
-func (rc *RecastClient) getNewConversationID() string {
-
-	return newRandomConversationID()
-}
-
-func newRandomConversationID() string {
+func (rc *RecastClient) getNewRandomConversationID() string {
 	rand.Seed(time.Now().UnixNano())
 
 	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")

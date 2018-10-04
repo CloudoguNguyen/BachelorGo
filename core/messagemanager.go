@@ -27,8 +27,6 @@ func NewMessageCreator(recastToken string) (*MessageManager, error) {
 	return &MessageManager{watsonPI, recastClient, true}, nil
 }
 
-//ToDo make watson read it
-
 func (manager *MessageManager) Response(message string, conversationID string) (string, error) {
 
 	path := "resources/" + conversationID + ".json"
@@ -38,7 +36,7 @@ func (manager *MessageManager) Response(message string, conversationID string) (
 		return "", errors.Wrapf(err, "failed to add message to json with %s", conversationID)
 	}
 
-	err = manager.watsonPI.updateProfileWithContent(path)
+	err = manager.watsonPI.UpdateProfileWithContent(path)
 	if err != nil {
 		if strings.Contains(err.Error(), "less than the minimum number of words required") {
 			manager.enoughWords = false
@@ -52,7 +50,7 @@ func (manager *MessageManager) Response(message string, conversationID string) (
 		return "We have enough words from you now, please tell us what you want", nil
 	}
 
-	fmt.Println(manager.watsonPI.GetProfileAsString())
+	fmt.Println(manager.watsonPI.ProfileAsString())
 	messageForRecast := message + " extraversion " + strconv.Itoa(manager.watsonPI.GetExtraversionValue())
 	fmt.Println("Message to recast: " + messageForRecast)
 
@@ -65,7 +63,7 @@ func (manager *MessageManager) Response(message string, conversationID string) (
 
 func (manager *MessageManager) NewConversationID() string {
 
-	newID := manager.recast.getNewConversationID()
+	newID := manager.recast.getNewRandomConversationID()
 
 	return newID
 }
