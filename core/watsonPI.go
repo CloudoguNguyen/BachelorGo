@@ -61,16 +61,14 @@ func (watson *WatsonPI) GetConscientiousnessValue() int {
 	intValue := int(value.Percentage * 100)
 	return intValue
 }
-
-func (watson *WatsonPI) GetAgreeablenessValue() int {
-
-	value := watson.Profile.Tree.Children[0].Children[0].Children[3]
+func (watson *WatsonPI) GetExtraversionValue() int {
+	value := watson.Profile.Tree.Children[0].Children[0].Children[2]
 	intValue := int(value.Percentage * 100)
 	return intValue
 }
 
-func (watson *WatsonPI) GetExtraversionValue() int {
-	value := watson.Profile.Tree.Children[0].Children[0].Children[2]
+func (watson *WatsonPI) GetAgreeablenessValue() int {
+	value := watson.Profile.Tree.Children[0].Children[0].Children[3]
 	intValue := int(value.Percentage * 100)
 	return intValue
 }
@@ -81,8 +79,12 @@ func (watson *WatsonPI) GetNeuroticismValue() int {
 	return intValue
 }
 
+func (watson *WatsonPI) InvalidProfileAsString() string {
+	return "Extraversion 999"
+}
+
 func (watson *WatsonPI) ProfileAsString() string {
-	traits := []string{"openness", "conscientiousness", "extraverion", "agreeableness", "neuroticism"}
+	traits := []string{"Openness", "Conscientiousness", "Extraversion", "Agreeableness", "Neuroticism"}
 	var result string
 
 	for index, value := range traits {

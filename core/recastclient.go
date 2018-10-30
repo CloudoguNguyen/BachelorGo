@@ -12,14 +12,9 @@ type RecastClient struct {
 	client *recast.RequestClient
 }
 
-const firstBotToken = "2019b5440f2c880dd8ebfc7d2c26df31"
-const secondBotToken = "e16b673cc84ab7b5d490115dedfe7d71"
+const secondBotToken = "91c37e8a8f5e9eca8bdd7fdce5a121a2"
 
 func NewRecastClient(token string) *RecastClient {
-
-	if token == "" {
-		token = secondBotToken
-	}
 
 	client := recast.RequestClient{Token: token, Language: "en"}
 
@@ -27,6 +22,7 @@ func NewRecastClient(token string) *RecastClient {
 }
 
 func (rc *RecastClient) GetReplies(message string, conversationID string) (string, error) {
+	fmt.Println("going in Message: ", message)
 
 	ops := recast.DialogOpts{Language: "en", ConversationId: conversationID}
 
@@ -36,6 +32,7 @@ func (rc *RecastClient) GetReplies(message string, conversationID string) (strin
 	}
 
 	answer := ""
+
 	for _, message := range response.Messages {
 
 		fmt.Println(message)

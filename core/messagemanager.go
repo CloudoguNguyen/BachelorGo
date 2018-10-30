@@ -6,7 +6,6 @@ import (
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -40,24 +39,29 @@ func (manager *MessageManager) Response(message string, conversationID string) (
 	if err != nil {
 		if strings.Contains(err.Error(), "less than the minimum number of words required") {
 			manager.enoughWords = false
-			return "We need atleast 100 words from you to analyse your personality, please tell us more about you", nil
+		} else {
+			return "", errors.Wrapf(err, "failed update profile in conversation %s", conversationID)
 		}
-		return "", errors.Wrapf(err, "failed update profile in conversation %s", conversationID)
 	}
+	messageForRecast := ""
 
 	if manager.enoughWords == false {
+		messageForRecast = fmt.Sprintf("%s %s", manager.watsonPI.InvalidProfileAsString(), message)
 		manager.enoughWords = true
-		return "We have enough words from you now, please tell us what you want", nil
-	}
+	} else {
+		messageForRecast = fmt.Sprintf("%s %s", manager.watsonPI.ProfileAsString(), message)
 
-	fmt.Println(manager.watsonPI.ProfileAsString())
-	messageForRecast := message + " extraversion " + strconv.Itoa(manager.watsonPI.GetExtraversionValue())
-	fmt.Println("Message to recast: " + messageForRecast)
+	}
 
 	answer, err := manager.recast.GetReplies(messageForRecast, conversationID)
 	if err != nil {
-		return "", errors.Wrapf(err, "failed to get reply with the messsage %s", message)
+		return "", errors.Wrapf(err, "failed to get reply with the message %s", message)
 	}
+
+	if answer == "" {
+		answer = "That's enough information. Please tell us what you want to know"
+	}
+
 	return answer, nil
 }
 

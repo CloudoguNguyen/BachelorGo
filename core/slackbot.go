@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+const activeRecastToken = secondBotToken
+
 type SlackBot struct {
 	slackToken     string
 	client         *slack.Client
@@ -20,7 +22,7 @@ func NewSlackBot() (*SlackBot, error) {
 	token := "xoxb-438453325860-438070557617-CviJFdimezMGe8FM04MwfO5a"
 	client := slack.New(token)
 	rtm := client.NewRTM()
-	creator, err := NewMessageCreator("")
+	creator, err := NewMessageCreator(activeRecastToken)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to create MessageManager")
 	}
@@ -69,7 +71,7 @@ func (bot *SlackBot) Respond(msg *slack.MessageEvent) {
 
 		bot.rtm.SendMessage(bot.rtm.NewOutgoingMessage(response, msg.Channel))
 
-		newCreator, err := NewMessageCreator("")
+		newCreator, err := NewMessageCreator(activeRecastToken)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -100,7 +102,7 @@ func (bot *SlackBot) getNewConversationID() string {
 }
 
 func (bot *SlackBot) getConversationID(text string) string {
-	values := strings.Split(text, ":")
+	values := strings.Split(text, " ")
 	convID := strings.TrimSpace(values[1])
 	return convID
 }
