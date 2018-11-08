@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"github.com/RecastAI/SDK-Golang/recast"
 	"github.com/pkg/errors"
-	"math/rand"
-	"time"
 )
 
 type RecastClient struct {
@@ -40,6 +38,7 @@ func (rc *RecastClient) GetReplies(message string, conversationID string) (strin
 }
 
 func (rc *RecastClient) GetIntent(message string, conversationID string) (recast.Intent, error) {
+
 	ops := recast.DialogOpts{Language: "en", ConversationId: conversationID}
 
 	response, err := rc.client.DialogText(message, &ops)
@@ -60,16 +59,4 @@ func convertMessageToString(message recast.Component) string {
 	stringMessage := fmt.Sprintf("%v", message)
 	stringMessage = stringMessage[7 : len(stringMessage)-1]
 	return stringMessage
-}
-
-func (rc *RecastClient) GetNewRandomConversationID() string {
-	rand.Seed(time.Now().UnixNano())
-
-	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
-
-	b := make([]rune, 10)
-	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
-	}
-	return string(b)
 }

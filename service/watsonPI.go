@@ -31,7 +31,7 @@ func NewPersonalityInsight() (*WatsonPI, error) {
 		return nil, errors.Wrapf(err, "failed to create personality Client")
 	}
 
-	var profile personality_insights.Profile
+	profile := personality_insights.Profile{}
 	return &WatsonPI{client, profile}, nil
 
 }

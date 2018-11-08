@@ -2,7 +2,6 @@ package core
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/cloudogu/BachelorGo/service"
 	"github.com/pkg/errors"
 	"io/ioutil"
@@ -15,6 +14,8 @@ type MessageManager struct {
 	responder   Responder
 	enoughWords bool
 }
+
+const profile_not_valid = "profile not valid"
 
 func NewMessageManager(responder Responder) (*MessageManager, error) {
 
@@ -38,28 +39,15 @@ func (manager *MessageManager) Response(message string, conversationID string) (
 	err = manager.watsonPI.UpdateProfileWithContent(path)
 	if err != nil {
 		if strings.Contains(err.Error(), "less than the minimum number of words required") {
-			manager.enoughWords = false
+			message = profile_not_valid
 		} else {
 			return "", errors.Wrapf(err, "failed update profile in conversation %s", conversationID)
 		}
 	}
-	messageForRecast := ""
 
-	if manager.enoughWords == false {
-		messageForRecast = fmt.Sprintf("%s %s", manager.watsonPI.InvalidProfileAsString(), message)
-		manager.enoughWords = true
-	} else {
-		messageForRecast = fmt.Sprintf("%s %s", manager.watsonPI.ProfileAsString(), message)
-
-	}
-
-	answer, err := manager.responder.GetResponse(messageForRecast, conversationID, manager.watsonPI.Profile)
+	answer, err := manager.responder.GetResponse(message, conversationID, *manager.watsonPI)
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to get reply with the message %s", message)
-	}
-
-	if answer == "" {
-		answer = "That's enough information. Please tell us what you want to know"
 	}
 
 	return answer, nil

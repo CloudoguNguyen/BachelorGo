@@ -1,14 +1,1 @@
-{
-  "contentItems": [
-    {
-      "content": "testMessage",
-      "contenttype": "text/plain",
-      "language": "en"
-    },
-    {
-      "content": "testMessage2",
-      "contenttype": "text/plain",
-      "language": "en"
-    }
-  ]
-}
+{"contentItems":[{"content":"testMessage","contenttype":"text/plain","language":"en"},{"content":"testMessage2","contenttype":"text/plain","language":"en"}]}

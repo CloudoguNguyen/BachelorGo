@@ -6,7 +6,9 @@ import (
 )
 
 func TestLoadAndSaveJsonIntoUserContent(t *testing.T) {
-	creator, err := NewMessageManager("")
+	artConsultant := NewArtConsultant()
+
+	creator, err := NewMessageManager(artConsultant)
 	assert.Nil(t, err)
 
 	userContents := UserContents{
