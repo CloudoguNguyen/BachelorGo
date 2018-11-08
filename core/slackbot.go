@@ -7,35 +7,39 @@ import (
 	"strings"
 )
 
+const slackToken = "xoxb-438453325860-438070557617-CviJFdimezMGe8FM04MwfO5a"
+
+const secondBotToken = "91c37e8a8f5e9eca8bdd7fdce5a121a2"
 const activeRecastToken = secondBotToken
 
 type SlackBot struct {
 	slackToken     string
 	client         *slack.Client
-	rtm            *slack.RTM
+	responder      Responder
 	creator        *MessageManager
 	conversationID string
 }
 
 func NewSlackBot() (*SlackBot, error) {
 
-	token := "xoxb-438453325860-438070557617-CviJFdimezMGe8FM04MwfO5a"
-	client := slack.New(token)
-	rtm := client.NewRTM()
-	creator, err := NewMessageCreator(activeRecastToken)
+	client := slack.New(slackToken)
+	artConsultant := NewArtConsultant(activeRecastToken)
+	creator, err := NewMessageManager(artConsultant)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to create MessageManager")
 	}
 
-	return &SlackBot{slackToken: token, client: client, rtm: rtm, creator: creator, conversationID: "1"}, nil
+	return &SlackBot{slackToken: slackToken, client: client, responder: artConsultant, creator: creator, conversationID: "1"}, nil
 }
 
 func (bot *SlackBot) Run() {
 
-	go bot.rtm.ManageConnection()
+	rtm := bot.client.NewRTM()
+
+	go rtm.ManageConnection()
 	for {
 		select {
-		case message := <-bot.rtm.IncomingEvents:
+		case message := <-rtm.IncomingEvents:
 			fmt.Print("Event Received: ")
 
 			switch event := message.Data.(type) {
@@ -61,6 +65,8 @@ func (bot *SlackBot) Run() {
 
 func (bot *SlackBot) Respond(msg *slack.MessageEvent) {
 
+	rtm := bot.client.NewRTM()
+
 	response := ""
 	text := msg.Text
 
@@ -69,9 +75,9 @@ func (bot *SlackBot) Respond(msg *slack.MessageEvent) {
 		bot.conversationID = bot.getNewConversationID()
 		response = "new conversation with ID:" + bot.conversationID
 
-		bot.rtm.SendMessage(bot.rtm.NewOutgoingMessage(response, msg.Channel))
+		rtm.SendMessage(rtm.NewOutgoingMessage(response, msg.Channel))
 
-		newCreator, err := NewMessageCreator(activeRecastToken)
+		newCreator, err := NewMessageManager(bot.responder)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -84,7 +90,7 @@ func (bot *SlackBot) Respond(msg *slack.MessageEvent) {
 		bot.conversationID = bot.getConversationID(text)
 		response = "switch to conversation with ID:" + bot.conversationID
 
-		bot.rtm.SendMessage(bot.rtm.NewOutgoingMessage(response, msg.Channel))
+		rtm.SendMessage(rtm.NewOutgoingMessage(response, msg.Channel))
 		return
 	}
 
@@ -93,7 +99,7 @@ func (bot *SlackBot) Respond(msg *slack.MessageEvent) {
 		fmt.Println(err)
 	}
 
-	bot.rtm.SendMessage(bot.rtm.NewOutgoingMessage(response, msg.Channel))
+	rtm.SendMessage(rtm.NewOutgoingMessage(response, msg.Channel))
 }
 
 func (bot *SlackBot) getNewConversationID() string {

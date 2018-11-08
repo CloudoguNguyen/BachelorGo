@@ -3,6 +3,7 @@ package core
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/cloudogu/BachelorGo/service"
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"os"
@@ -10,20 +11,19 @@ import (
 )
 
 type MessageManager struct {
-	watsonPI    *WatsonPI
-	recast      *RecastClient
+	watsonPI    *service.WatsonPI
+	responder   Responder
 	enoughWords bool
 }
 
-func NewMessageCreator(recastToken string) (*MessageManager, error) {
+func NewMessageManager(responder Responder) (*MessageManager, error) {
 
-	watsonPI, err := NewPersonalityInsight()
+	watsonPI, err := service.NewPersonalityInsight()
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to create watson PI")
 	}
-	recastClient := NewRecastClient(recastToken)
 
-	return &MessageManager{watsonPI, recastClient, true}, nil
+	return &MessageManager{watsonPI, responder, true}, nil
 }
 
 func (manager *MessageManager) Response(message string, conversationID string) (string, error) {
@@ -53,7 +53,7 @@ func (manager *MessageManager) Response(message string, conversationID string) (
 
 	}
 
-	answer, err := manager.recast.GetReplies(messageForRecast, conversationID)
+	answer, err := manager.responder.GetResponse(messageForRecast, conversationID, manager.watsonPI.Profile)
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to get reply with the message %s", message)
 	}
@@ -67,7 +67,7 @@ func (manager *MessageManager) Response(message string, conversationID string) (
 
 func (manager *MessageManager) NewConversationID() string {
 
-	newID := manager.recast.getNewRandomConversationID()
+	newID := manager.responder.GetNewRandomConversationID()
 
 	return newID
 }

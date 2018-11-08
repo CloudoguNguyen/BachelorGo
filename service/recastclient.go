@@ -1,4 +1,4 @@
-package core
+package service
 
 import (
 	"fmt"
@@ -12,8 +12,6 @@ type RecastClient struct {
 	client *recast.RequestClient
 }
 
-const secondBotToken = "91c37e8a8f5e9eca8bdd7fdce5a121a2"
-
 func NewRecastClient(token string) *RecastClient {
 
 	client := recast.RequestClient{Token: token, Language: "en"}
@@ -22,7 +20,6 @@ func NewRecastClient(token string) *RecastClient {
 }
 
 func (rc *RecastClient) GetReplies(message string, conversationID string) (string, error) {
-	fmt.Println("going in Message: ", message)
 
 	ops := recast.DialogOpts{Language: "en", ConversationId: conversationID}
 
@@ -42,6 +39,22 @@ func (rc *RecastClient) GetReplies(message string, conversationID string) (strin
 
 }
 
+func (rc *RecastClient) GetIntent(message string, conversationID string) (recast.Intent, error) {
+	ops := recast.DialogOpts{Language: "en", ConversationId: conversationID}
+
+	response, err := rc.client.DialogText(message, &ops)
+	if err != nil {
+		return recast.Intent{}, errors.Wrapf(err, "failed to converse text %s", message)
+	}
+
+	intent, err := response.Nlp.Intent()
+	if err != nil {
+		return recast.Intent{}, errors.Wrapf(err, "failed to get intent from text %s", message)
+	}
+
+	return intent, err
+}
+
 func convertMessageToString(message recast.Component) string {
 
 	stringMessage := fmt.Sprintf("%v", message)
@@ -49,7 +62,7 @@ func convertMessageToString(message recast.Component) string {
 	return stringMessage
 }
 
-func (rc *RecastClient) getNewRandomConversationID() string {
+func (rc *RecastClient) GetNewRandomConversationID() string {
 	rand.Seed(time.Now().UnixNano())
 
 	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
