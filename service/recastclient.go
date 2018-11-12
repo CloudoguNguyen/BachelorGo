@@ -30,7 +30,6 @@ func (rc *RecastClient) GetReplies(message string, conversationID string) (strin
 
 	for _, message := range response.Messages {
 
-		fmt.Println(message)
 		answer += convertMessageToString(message) + "\n"
 	}
 	return answer, nil

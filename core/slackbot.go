@@ -9,9 +9,6 @@ import (
 
 const slackToken = "xoxb-438453325860-438070557617-CviJFdimezMGe8FM04MwfO5a"
 
-const secondBotToken = "91c37e8a8f5e9eca8bdd7fdce5a121a2"
-const artConsultantToken = "1fedc8b90ea54efc652b6a42c82de9f2"
-
 type SlackBot struct {
 	slackToken     string
 	client         *slack.Client

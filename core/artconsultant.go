@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"github.com/cloudogu/BachelorGo/service"
 	"github.com/pkg/errors"
 	"math/rand"
@@ -23,6 +22,8 @@ const (
 	artAbstract       = "abstract art"
 )
 
+const artConsultantToken = "1fedc8b90ea54efc652b6a42c82de9f2"
+
 type ArtConsultant struct {
 	recastClient *service.RecastClient
 }
@@ -37,7 +38,13 @@ func NewArtConsultant() *ArtConsultant {
 func (ac *ArtConsultant) GetResponse(message string, conversationID string, watsonPI service.WatsonPI) (string, error) {
 
 	if message == profile_not_valid {
-		return ac.getToKnowUser(), nil
+
+		message, err := ac.getToKnowUser(conversationID)
+		if err != nil {
+			return "", errors.Wrapf(err, "failed to get get to know user")
+		}
+
+		return message, nil
 	}
 
 	response := ""
@@ -58,16 +65,14 @@ func (ac *ArtConsultant) GetResponse(message string, conversationID string, wats
 	return response, nil
 }
 
-func (ac *ArtConsultant) getToKnowUser() string {
-	needToKnowMoreAboutUser := []string{"We need to know more about you", "We need more information about your profile", "We still need your input"}
-	questionsToKnowUser := []string{"Tell us more about you,", "How was your day?", "What is your hobbyß"}
+func (ac *ArtConsultant) getToKnowUser(conversationID string) (string, error) {
 
-	rand.Seed(time.Now().Unix()) // initialize global pseudo random generator
+	reply, err := ac.recastClient.GetReplies(profile_not_valid, conversationID)
+	if err != nil {
+		return "", errors.Wrapf(err, "failed to get reply from %s", profile_not_valid)
+	}
 
-	// return randome part of needToknowMoreAboutUser and questionsToKnowUser
-	message := fmt.Sprintf("%s.\n%s.", needToKnowMoreAboutUser[rand.Intn(len(needToKnowMoreAboutUser))], questionsToKnowUser[rand.Intn(len(questionsToKnowUser))])
-
-	return message
+	return reply, nil
 
 }
 

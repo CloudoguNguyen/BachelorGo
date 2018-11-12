@@ -8,12 +8,6 @@ import (
 	"testing"
 )
 
-func TestGetToKnowUser(t *testing.T) {
-	consultant := NewArtConsultant()
-	s := consultant.getToKnowUser()
-	fmt.Println(s)
-}
-
 func TestRecommendArt(t *testing.T) {
 	watsonPI := getTestWatsonPI(t)
 
@@ -58,6 +52,16 @@ func TestGetResponse(t *testing.T) {
 	assert.True(t, strings.Contains(res, "pop-art"))
 	assert.True(t, strings.Contains(res, "kubism"))
 
+}
+
+func TestGetToKnowUser(t *testing.T) {
+	consultant := NewArtConsultant()
+
+	res, err := consultant.getToKnowUser("testConv")
+
+	assert.Nil(t, err)
+
+	assert.NotNil(t, res)
 }
 
 func TestGetResponseNoIntentFound(t *testing.T) {
