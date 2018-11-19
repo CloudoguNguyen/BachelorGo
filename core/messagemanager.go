@@ -36,13 +36,9 @@ func (manager *MessageManager) Response(message string, conversationID string) (
 		return "", errors.Wrapf(err, "failed to add message to json with %s", conversationID)
 	}
 
-	err = manager.watsonPI.UpdateProfileWithContent(path)
+	err = manager.updateProfile(&message, path)
 	if err != nil {
-		if strings.Contains(err.Error(), "less than the minimum number of words required") {
-			message = profile_not_valid
-		} else {
-			return "", errors.Wrapf(err, "failed update profile in conversation %s", conversationID)
-		}
+		return "", errors.Wrapf(err, "failed to update profile in conversation %s", conversationID)
 	}
 
 	answer, err := manager.responder.GetResponse(message, conversationID, *manager.watsonPI)
@@ -51,6 +47,17 @@ func (manager *MessageManager) Response(message string, conversationID string) (
 	}
 
 	return answer, nil
+}
+
+func (manager *MessageManager) updateProfile(message *string, path string) error {
+	err := manager.watsonPI.UpdateProfileWithContent(path)
+	if err != nil {
+		if strings.Contains(err.Error(), "less than the minimum number of words required") {
+			*message = profile_not_valid
+		} else {
+			return errors.Wrapf(err, "failed update profile in conversation")
+		}
+	}
 }
 
 func (manager *MessageManager) NewConversationID() string {

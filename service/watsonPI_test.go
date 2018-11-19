@@ -15,7 +15,7 @@ func TestUpdateProfileWIthContent(t *testing.T) {
 	err = pi.UpdateProfileWithContent("../resources/test/contents.json")
 	assert.Nil(t, err)
 
-	value := pi.GetConscientiousnessValue()
+	value := pi.Conscientiousness()
 
 	assert.True(t, value > 1, value)
 }
@@ -36,7 +36,7 @@ func TestSaveAndLoadProfileAsJson(t *testing.T) {
 	err = pi.LoadJsonAsProfile(path)
 	assert.Nil(t, err)
 
-	expected := pi.GetAgreeablenessValue()
+	expected := pi.Agreeableness()
 
 	assert.True(t, expected > 1, expected)
 

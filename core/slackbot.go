@@ -9,16 +9,16 @@ import (
 
 const slackToken = "xoxb-438453325860-438070557617-CviJFdimezMGe8FM04MwfO5a"
 
-type SlackBot struct {
+type SlackApp struct {
 	slackToken     string
 	client         *slack.Client
 	rtm            *slack.RTM
 	responder      Responder
-	creator        *MessageManager
+	manager        *MessageManager
 	conversationID string
 }
 
-func NewSlackBot() (*SlackBot, error) {
+func NewSlackBot() (*SlackApp, error) {
 
 	client := slack.New(slackToken)
 	artConsultant := NewArtConsultant()
@@ -29,15 +29,15 @@ func NewSlackBot() (*SlackBot, error) {
 		return nil, errors.Wrapf(err, "failed to create MessageManager")
 	}
 
-	return &SlackBot{slackToken: slackToken, client: client, rtm: rtm, responder: artConsultant, creator: creator, conversationID: "1"}, nil
+	return &SlackApp{slackToken: slackToken, client: client, rtm: rtm, responder: artConsultant, manager: creator, conversationID: "1"}, nil
 }
 
-func (bot *SlackBot) Run() {
+func (slackApp *SlackApp) Run() {
 
-	go bot.rtm.ManageConnection()
+	go slackApp.rtm.ManageConnection()
 	for {
 		select {
-		case message := <-bot.rtm.IncomingEvents:
+		case message := <-slackApp.rtm.IncomingEvents:
 			fmt.Print("Event Received: ")
 
 			switch event := message.Data.(type) {
@@ -47,7 +47,7 @@ func (bot *SlackBot) Run() {
 			case *slack.MessageEvent:
 				fmt.Printf("Message: %v\n", event.Text)
 
-				bot.Respond(event)
+				slackApp.Respond(event)
 
 			case *slack.RTMError:
 				fmt.Printf("Error: %s\n", event.Error())
@@ -61,49 +61,49 @@ func (bot *SlackBot) Run() {
 
 }
 
-func (bot *SlackBot) Respond(msg *slack.MessageEvent) {
+func (slackApp *SlackApp) Respond(msg *slack.MessageEvent) {
 
 	response := ""
 	text := msg.Text
 
 	if strings.ToLower(text) == "%new" {
 
-		bot.conversationID = bot.getNewConversationID()
-		response = "new conversation with ID:" + bot.conversationID
+		slackApp.conversationID = slackApp.getNewConversationID()
+		response = "new conversation with ID:" + slackApp.conversationID
 
-		bot.rtm.SendMessage(bot.rtm.NewOutgoingMessage(response, msg.Channel))
+		slackApp.rtm.SendMessage(slackApp.rtm.NewOutgoingMessage(response, msg.Channel))
 
-		newCreator, err := NewMessageManager(bot.responder)
+		newManager, err := NewMessageManager(slackApp.responder)
 		if err != nil {
 			fmt.Println(err)
 		}
 
-		bot.creator = newCreator
+		slackApp.manager = newManager
 		return
 
 	} else if strings.Contains(strings.ToLower(text), "%switch") {
 
-		bot.conversationID = bot.getConversationID(text)
-		response = "switch to conversation with ID:" + bot.conversationID
+		slackApp.conversationID = slackApp.getConversationID(text)
+		response = "switch to conversation with ID:" + slackApp.conversationID
 
-		bot.rtm.SendMessage(bot.rtm.NewOutgoingMessage(response, msg.Channel))
+		slackApp.rtm.SendMessage(slackApp.rtm.NewOutgoingMessage(response, msg.Channel))
 		return
 	}
 
-	response, err := bot.creator.Response(text, bot.conversationID)
+	response, err := slackApp.manager.Response(text, slackApp.conversationID)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	bot.rtm.SendMessage(bot.rtm.NewOutgoingMessage(response, msg.Channel))
+	slackApp.rtm.SendMessage(slackApp.rtm.NewOutgoingMessage(response, msg.Channel))
 }
 
-func (bot *SlackBot) getNewConversationID() string {
-	newID := bot.creator.NewConversationID()
+func (slackApp *SlackApp) getNewConversationID() string {
+	newID := slackApp.manager.NewConversationID()
 	return newID
 }
 
-func (bot *SlackBot) getConversationID(text string) string {
+func (slackApp *SlackApp) getConversationID(text string) string {
 	values := strings.Split(text, " ")
 	convID := strings.TrimSpace(values[1])
 	return convID

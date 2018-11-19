@@ -8,21 +8,23 @@ import (
 )
 
 const (
-	artSurrealism     = "surrealism"
-	artComplex        = "complex art"
-	artJapanese       = "japanese art"
-	artNeutral        = "neutral_art"
-	artNatural        = "natural_art"
-	artRepresentative = "representative art"
-	artImpression     = "impressionism"
-	artTradition      = "traditional art"
-	artKubism         = "kubism"
-	artNegEmotion     = "negatively emotional art"
-	artPop            = "pop-art"
-	artAbstract       = "abstract art"
+	artSurrealism      = "surrealism"
+	artComplex         = "complex art"
+	artJapanese        = "japanese art"
+	artNeutral         = "neutral_art"
+	artNatural         = "natural_art"
+	artRepresentative  = "representative art"
+	artImpression      = "impressionism"
+	artTradition       = "traditional art"
+	artKubism          = "kubism"
+	artNegEmotion      = "negatively emotional art"
+	artPop             = "pop-art"
+	artAbstract        = "abstract art"
+	highIntensity      = "high"
+	lowIntensity       = "low"
+	middleIntensity    = "middle"
+	artConsultantToken = "1fedc8b90ea54efc652b6a42c82de9f2"
 )
-
-const artConsultantToken = "1fedc8b90ea54efc652b6a42c82de9f2"
 
 type ArtConsultant struct {
 	recastClient *service.RecastClient
@@ -76,6 +78,16 @@ func (ac *ArtConsultant) getToKnowUser(conversationID string) (string, error) {
 
 }
 
+func getIntensity(value int) string {
+	if value > 65 && value <= 100 {
+		return highIntensity
+	} else if value <= 65 && value >= 34 {
+		return middleIntensity
+	}
+
+	return lowIntensity
+}
+
 func (ac *ArtConsultant) recommendArt(watsonPI service.WatsonPI) string {
 
 	recommendableArts := ac.getRecommendableArts(watsonPI)
@@ -97,23 +109,23 @@ func (ac *ArtConsultant) recommendArt(watsonPI service.WatsonPI) string {
 func (ac *ArtConsultant) getRecommendableArts(watsonPI service.WatsonPI) []string {
 	recommendableArts := []string{}
 
-	if watsonPI.GetOpennessValue() > 65 {
+	if getIntensity(watsonPI.Openness()) == highIntensity {
 		recommendableArts = append(recommendableArts, artSurrealism, artComplex, artJapanese)
-	} else if watsonPI.GetOpennessValue() < 34 {
+	} else if getIntensity(watsonPI.Openness()) == lowIntensity {
 		recommendableArts = append(recommendableArts, artNeutral, artNatural)
 	}
 
-	if watsonPI.GetConscientiousnessValue() > 65 {
+	if getIntensity(watsonPI.Conscientiousness()) == highIntensity {
 		recommendableArts = append(recommendableArts, artRepresentative)
-	} else if watsonPI.GetConscientiousnessValue() < 34 {
+	} else if getIntensity(watsonPI.Conscientiousness()) == lowIntensity {
 		recommendableArts = append(recommendableArts, artImpression, artTradition)
 	}
 
-	if watsonPI.GetExtraversionValue() > 65 {
+	if getIntensity(watsonPI.Extraversion()) == highIntensity {
 		recommendableArts = append(recommendableArts, artKubism)
 	}
 
-	if watsonPI.GetNeuroticismValue() > 65 {
+	if getIntensity(watsonPI.Neuroticism()) == highIntensity {
 		recommendableArts = append(recommendableArts, artNegEmotion, artPop, artAbstract)
 	}
 

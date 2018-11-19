@@ -50,30 +50,30 @@ func (watson *WatsonPI) UpdateProfileWithContent(pathToContent string) error {
 	return nil
 }
 
-func (watson *WatsonPI) GetOpennessValue() int {
+func (watson *WatsonPI) Openness() int {
 	value := watson.Profile.Tree.Children[0].Children[0].Children[0]
 	intValue := int(value.Percentage * 100)
 	return intValue
 }
 
-func (watson *WatsonPI) GetConscientiousnessValue() int {
+func (watson *WatsonPI) Conscientiousness() int {
 	value := watson.Profile.Tree.Children[0].Children[0].Children[1]
 	intValue := int(value.Percentage * 100)
 	return intValue
 }
-func (watson *WatsonPI) GetExtraversionValue() int {
+func (watson *WatsonPI) Extraversion() int {
 	value := watson.Profile.Tree.Children[0].Children[0].Children[2]
 	intValue := int(value.Percentage * 100)
 	return intValue
 }
 
-func (watson *WatsonPI) GetAgreeablenessValue() int {
+func (watson *WatsonPI) Agreeableness() int {
 	value := watson.Profile.Tree.Children[0].Children[0].Children[3]
 	intValue := int(value.Percentage * 100)
 	return intValue
 }
 
-func (watson *WatsonPI) GetNeuroticismValue() int {
+func (watson *WatsonPI) Neuroticism() int {
 	value := watson.Profile.Tree.Children[0].Children[0].Children[4]
 	intValue := int(value.Percentage * 100)
 	return intValue
