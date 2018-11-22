@@ -58,6 +58,8 @@ func (manager *MessageManager) updateProfile(message *string, path string) error
 			return errors.Wrapf(err, "failed update profile in conversation")
 		}
 	}
+
+	return nil
 }
 
 func (manager *MessageManager) NewConversationID() string {
