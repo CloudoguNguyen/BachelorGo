@@ -142,7 +142,11 @@ func (ac *ArtConsultant) getIntent(message string, conversationID string) (strin
 		return "", errors.Wrapf(err, "failed to get intent from message %s", message)
 	}
 
-	return intent.Slug, err
+	if intent.Confidence >= 0.95 {
+		return intent.Slug, err
+	}
+
+	return "", nil
 
 }
 
