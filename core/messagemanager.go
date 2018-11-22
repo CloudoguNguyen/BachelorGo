@@ -2,7 +2,7 @@ package core
 
 import (
 	"encoding/json"
-	"github.com/cloudogu/BachelorGo/service"
+	"github.com/BachelorGo/service"
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"os"

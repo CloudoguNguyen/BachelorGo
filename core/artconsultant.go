@@ -2,7 +2,7 @@ package core
 
 import (
 	"fmt"
-	"github.com/cloudogu/BachelorGo/service"
+	"github.com/BachelorGo/service"
 	"github.com/pkg/errors"
 	"math/rand"
 	"time"
