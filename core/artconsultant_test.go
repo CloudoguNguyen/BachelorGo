@@ -9,26 +9,24 @@ import (
 )
 
 func TestRecommendArt(t *testing.T) {
-	watsonPI := getTestWatsonPI(t)
+	profile := getTestUserProfile(t)
 
 	consultant := NewArtConsultant()
 
-	s := consultant.recommendArt(*watsonPI)
+	s := consultant.recommendArt(profile)
 
 	assert.True(t, strings.Contains(s, "pop-art"))
 	assert.True(t, strings.Contains(s, "kubism"))
 
 }
 
-func getTestWatsonPI(t *testing.T) *service.WatsonPI {
+func getTestUserProfile(t *testing.T) service.UserProfile {
 	path := "../resources/test/profile.json"
 
-	watsonPI, err := service.NewPersonalityInsight()
-	assert.Nil(t, err)
+	profile := service.UserProfile{}
+	profile.LoadJsonAsProfile(path)
 
-	watsonPI.LoadJsonAsProfile(path)
-
-	return watsonPI
+	return profile
 }
 
 func TestGetIntent(t *testing.T) {
@@ -43,9 +41,9 @@ func TestGetIntent(t *testing.T) {
 
 func TestGetResponse(t *testing.T) {
 	consultant := NewArtConsultant()
-	watsonPI := getTestWatsonPI(t)
+	profile := getTestUserProfile(t)
 
-	res, err := consultant.GetResponse("get me some art", "testConv", *watsonPI)
+	res, err := consultant.GetResponse("get me some art", "testConv", &profile)
 
 	assert.Nil(t, err)
 
@@ -66,9 +64,9 @@ func TestGetToKnowUser(t *testing.T) {
 
 func TestGetResponseNoIntentFound(t *testing.T) {
 	consultant := NewArtConsultant()
-	watsonPI := getTestWatsonPI(t)
+	profile := getTestUserProfile(t)
 
-	res, err := consultant.GetResponse("waklalalalalal", "testConv", *watsonPI)
+	res, err := consultant.GetResponse("Wakakakaka", "testConvasdasdasd", &profile)
 
 	assert.Nil(t, err)
 
