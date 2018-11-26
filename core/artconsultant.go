@@ -28,14 +28,16 @@ const (
 )
 
 type ArtConsultant struct {
-	recastClient *service.RecastClient
+	recastClient   *service.RecastClient
+	isProfileKnown map[string]bool
 }
 
 func NewArtConsultant() *ArtConsultant {
 
 	recast := service.NewRecastClient(artConsultantToken)
+	isProfileKnown := make(map[string]bool)
 
-	return &ArtConsultant{recast}
+	return &ArtConsultant{recast, isProfileKnown}
 }
 
 func (ac *ArtConsultant) GetResponse(message string, conversationID string, profile *service.UserProfile) (string, error) {
@@ -65,7 +67,14 @@ func (ac *ArtConsultant) GetResponse(message string, conversationID string, prof
 	}
 
 	if response == "" {
-		response = "We don't know what you want"
+		if ac.isProfileKnown[conversationID] == false {
+
+			response = "We have enough information about you now. Please tell us what you want"
+			ac.isProfileKnown[conversationID] = true
+
+		} else {
+			response = "We don't know what you want"
+		}
 	}
 
 	return response, nil
@@ -100,8 +109,10 @@ func (ac *ArtConsultant) recommendArt(profile service.UserProfile) string {
 		response := "You might like this direction of art: "
 
 		for _, art := range recommendableArts {
-			response += art + ", "
+			response += art + ","
 		}
+
+		response = response[:(len(response) - 1)]
 
 		return response
 	}

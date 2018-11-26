@@ -29,7 +29,7 @@ func NewMessageManager(responder Responder) (*MessageManager, error) {
 
 func (manager *MessageManager) Response(message string, conversationID string) (string, error) {
 
-	path := "resources/" + conversationID + ".json"
+	path := "resources/conversations/" + conversationID + ".json"
 
 	err := manager.addMessageIntoConversationJson(message, path)
 	if err != nil {
