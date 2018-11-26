@@ -1,7 +1,8 @@
 package core
 
 import (
-	"github.com/cloudogu/BachelorGo/service"
+	"fmt"
+	"github.com/BachelorGo/service"
 	"github.com/pkg/errors"
 	"math/rand"
 	"time"
@@ -27,17 +28,19 @@ const (
 )
 
 type ArtConsultant struct {
-	recastClient *service.RecastClient
+	recastClient   *service.RecastClient
+	isProfileKnown map[string]bool
 }
 
 func NewArtConsultant() *ArtConsultant {
 
 	recast := service.NewRecastClient(artConsultantToken)
+	isProfileKnown := make(map[string]bool)
 
-	return &ArtConsultant{recast}
+	return &ArtConsultant{recast, isProfileKnown}
 }
 
-func (ac *ArtConsultant) GetResponse(message string, conversationID string, watsonPI service.WatsonPI) (string, error) {
+func (ac *ArtConsultant) GetResponse(message string, conversationID string, profile *service.UserProfile) (string, error) {
 
 	if message == profile_not_valid {
 
@@ -56,12 +59,22 @@ func (ac *ArtConsultant) GetResponse(message string, conversationID string, wats
 		return "", errors.Wrapf(err, "failed to get intent")
 	}
 
+	fmt.Println(intent)
+	fmt.Println(message)
+
 	if intent == "ask-art" {
-		response = ac.recommendArt(watsonPI)
+		response = ac.recommendArt(*profile)
 	}
 
 	if response == "" {
-		response = "We don't know what you want"
+		if ac.isProfileKnown[conversationID] == false {
+
+			response = "We have enough information about you now. Please tell us what you want"
+			ac.isProfileKnown[conversationID] = true
+
+		} else {
+			response = "We don't know what you want"
+		}
 	}
 
 	return response, nil
@@ -88,16 +101,18 @@ func getIntensity(value int) string {
 	return lowIntensity
 }
 
-func (ac *ArtConsultant) recommendArt(watsonPI service.WatsonPI) string {
+func (ac *ArtConsultant) recommendArt(profile service.UserProfile) string {
 
-	recommendableArts := ac.getRecommendableArts(watsonPI)
+	recommendableArts := ac.getRecommendableArts(profile)
 
 	if len(recommendableArts) > 0 {
 		response := "You might like this direction of art: "
 
 		for _, art := range recommendableArts {
-			response += art + ", "
+			response += art + ","
 		}
+
+		response = response[:(len(response) - 1)]
 
 		return response
 	}
@@ -106,26 +121,26 @@ func (ac *ArtConsultant) recommendArt(watsonPI service.WatsonPI) string {
 
 }
 
-func (ac *ArtConsultant) getRecommendableArts(watsonPI service.WatsonPI) []string {
+func (ac *ArtConsultant) getRecommendableArts(profile service.UserProfile) []string {
 	recommendableArts := []string{}
 
-	if getIntensity(watsonPI.Openness()) == highIntensity {
+	if getIntensity(profile.Openness()) == highIntensity {
 		recommendableArts = append(recommendableArts, artSurrealism, artComplex, artJapanese)
-	} else if getIntensity(watsonPI.Openness()) == lowIntensity {
+	} else if getIntensity(profile.Openness()) == lowIntensity {
 		recommendableArts = append(recommendableArts, artNeutral, artNatural)
 	}
 
-	if getIntensity(watsonPI.Conscientiousness()) == highIntensity {
+	if getIntensity(profile.Conscientiousness()) == highIntensity {
 		recommendableArts = append(recommendableArts, artRepresentative)
-	} else if getIntensity(watsonPI.Conscientiousness()) == lowIntensity {
+	} else if getIntensity(profile.Conscientiousness()) == lowIntensity {
 		recommendableArts = append(recommendableArts, artImpression, artTradition)
 	}
 
-	if getIntensity(watsonPI.Extraversion()) == highIntensity {
+	if getIntensity(profile.Extraversion()) == highIntensity {
 		recommendableArts = append(recommendableArts, artKubism)
 	}
 
-	if getIntensity(watsonPI.Neuroticism()) == highIntensity {
+	if getIntensity(profile.Neuroticism()) == highIntensity {
 		recommendableArts = append(recommendableArts, artNegEmotion, artPop, artAbstract)
 	}
 
@@ -138,7 +153,11 @@ func (ac *ArtConsultant) getIntent(message string, conversationID string) (strin
 		return "", errors.Wrapf(err, "failed to get intent from message %s", message)
 	}
 
-	return intent.Slug, err
+	if intent.Confidence >= 0.95 {
+		return intent.Slug, err
+	}
+
+	return "", nil
 
 }
 

@@ -2,7 +2,7 @@ package core
 
 import (
 	"encoding/json"
-	"github.com/cloudogu/BachelorGo/service"
+	"github.com/BachelorGo/service"
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"os"
@@ -29,19 +29,19 @@ func NewMessageManager(responder Responder) (*MessageManager, error) {
 
 func (manager *MessageManager) Response(message string, conversationID string) (string, error) {
 
-	path := "resources/" + conversationID + ".json"
+	path := "resources/conversations/" + conversationID + ".json"
 
 	err := manager.addMessageIntoConversationJson(message, path)
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to add message to json with %s", conversationID)
 	}
 
-	err = manager.updateProfile(&message, path)
+	profile, err := manager.getUserProfile(&message, path)
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to update profile in conversation %s", conversationID)
 	}
 
-	answer, err := manager.responder.GetResponse(message, conversationID, *manager.watsonPI)
+	answer, err := manager.responder.GetResponse(message, conversationID, &profile)
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to get reply with the message %s", message)
 	}
@@ -49,17 +49,18 @@ func (manager *MessageManager) Response(message string, conversationID string) (
 	return answer, nil
 }
 
-func (manager *MessageManager) updateProfile(message *string, path string) error {
-	err := manager.watsonPI.UpdateProfileWithContent(path)
+func (manager *MessageManager) getUserProfile(message *string, path string) (service.UserProfile, error) {
+
+	profile, err := manager.watsonPI.GetUserProfile(path)
 	if err != nil {
 		if strings.Contains(err.Error(), "less than the minimum number of words required") {
 			*message = profile_not_valid
 		} else {
-			return errors.Wrapf(err, "failed update profile in conversation")
+			return profile, errors.Wrapf(err, "failed update profile in conversation")
 		}
 	}
 
-	return nil
+	return profile, nil
 }
 
 func (manager *MessageManager) NewConversationID() string {
@@ -139,7 +140,7 @@ func (manager *MessageManager) saveUserContentsToJson(path string, userContent *
 
 	fo, err := os.Create(path)
 	if err != nil {
-		return errors.Wrapf(err, "failed to create Profile save path")
+		return errors.Wrapf(err, "failed to create UserProfile save path")
 	}
 
 	defer fo.Close()

@@ -38,7 +38,7 @@ func (slackApp *SlackApp) Run() {
 	for {
 		select {
 		case message := <-slackApp.rtm.IncomingEvents:
-			fmt.Print("Event Received: ")
+			fmt.Println("Event Received: ")
 
 			switch event := message.Data.(type) {
 			case *slack.ConnectedEvent:
@@ -46,7 +46,6 @@ func (slackApp *SlackApp) Run() {
 
 			case *slack.MessageEvent:
 				fmt.Printf("Message: %v\n", event.Text)
-
 				slackApp.Respond(event)
 
 			case *slack.RTMError:
