@@ -7,6 +7,11 @@ import (
 	"os"
 )
 
+const (
+	watsonUserName = "7bdf7ef4-8c83-4d92-87e6-a03be90b4caf"
+	watsonPW       = "OhjpzkGkdkNK"
+)
+
 type WatsonPI struct {
 	Client personality_insights.Client
 }
@@ -15,8 +20,8 @@ func NewPersonalityInsight() (*WatsonPI, error) {
 
 	config := watson.Config{
 		Credentials: watson.Credentials{
-			Username: "7bdf7ef4-8c83-4d92-87e6-a03be90b4caf",
-			Password: "OhjpzkGkdkNK",
+			Username: watsonUserName,
+			Password: watsonPW,
 		},
 	}
 

@@ -74,7 +74,7 @@ func (manager *MessageManager) getUserProfile(path string) (service.UserProfile,
 func (manager *MessageManager) addMessageIntoConversationJson(message string, jsonPath string) error {
 
 	userContent := UserContents{}
-	err := manager.loadJsonToUserContent(jsonPath, &userContent)
+	err := manager.loadJsonToUserContents(jsonPath, &userContent)
 	if err != nil {
 		return errors.Wrapf(err, "failed to load user content %s", jsonPath)
 	}
@@ -91,7 +91,7 @@ func (manager *MessageManager) addMessageIntoConversationJson(message string, js
 
 }
 
-func (manager *MessageManager) loadJsonToUserContent(path string, content *UserContents) error {
+func (manager *MessageManager) loadJsonToUserContents(path string, content *UserContents) error {
 
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 

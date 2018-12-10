@@ -76,7 +76,7 @@ func (ac *ArtConsultant) GetResponse(message string, conversationID string, prof
 
 func (ac *ArtConsultant) getToKnowUser(conversationID string) (string, error) {
 
-	reply, err := ac.recastClient.GetReplies(profile_not_valid, conversationID)
+	reply, err := ac.recastClient.GetReply(profile_not_valid, conversationID)
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to get reply from %s", profile_not_valid)
 	}
@@ -86,9 +86,9 @@ func (ac *ArtConsultant) getToKnowUser(conversationID string) (string, error) {
 }
 
 func getIntensity(value int) string {
-	if value > 65 && value <= 100 {
+	if value > 66 && value <= 100 {
 		return highIntensity
-	} else if value <= 65 && value >= 34 {
+	} else if value <= 66 && value >= 34 {
 		return middleIntensity
 	}
 
@@ -97,7 +97,7 @@ func getIntensity(value int) string {
 
 func (ac *ArtConsultant) recommendArt(profile service.UserProfile) string {
 
-	recommendableArts := ac.getRecommendableArts(profile)
+	recommendableArts := ac.getFittedArts(profile)
 
 	if len(recommendableArts) > 0 {
 		response := "You might like this direction of art: "
@@ -106,8 +106,6 @@ func (ac *ArtConsultant) recommendArt(profile service.UserProfile) string {
 			response += "\n " + art
 		}
 
-		//response = response[:(len(response) - 2)]
-
 		return response
 	}
 
@@ -115,7 +113,7 @@ func (ac *ArtConsultant) recommendArt(profile service.UserProfile) string {
 
 }
 
-func (ac *ArtConsultant) getRecommendableArts(profile service.UserProfile) []string {
+func (ac *ArtConsultant) getFittedArts(profile service.UserProfile) []string {
 	recommendableArts := []string{}
 
 	if getIntensity(profile.Openness()) == highIntensity {
@@ -147,8 +145,8 @@ func (ac *ArtConsultant) getIntent(message string, conversationID string) (strin
 		return "", errors.Wrapf(err, "failed to get intent from message %s", message)
 	}
 
-	if intent.Confidence >= 0.95 {
-		return intent.Slug, err
+	if intent.Confidence >= 0.93 {
+		return intent.Slug, nil
 	}
 
 	return "", nil

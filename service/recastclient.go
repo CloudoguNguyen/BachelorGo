@@ -17,7 +17,7 @@ func NewRecastClient(token string) *RecastClient {
 	return &RecastClient{client: &client}
 }
 
-func (rc *RecastClient) GetReplies(message string, conversationID string) (string, error) {
+func (rc *RecastClient) GetReply(message string, conversationID string) (string, error) {
 
 	ops := recast.DialogOpts{Language: "en", ConversationId: conversationID}
 

@@ -18,7 +18,7 @@ func TestLoadAndSaveJsonIntoUserContent(t *testing.T) {
 	loadPath := "../resources/test/empty.json"
 	savePath := "../resources/test/contents2.json"
 
-	err = creator.loadJsonToUserContent(loadPath, &userContents)
+	err = creator.loadJsonToUserContents(loadPath, &userContents)
 	assert.Nil(t, err)
 
 	contentItem := newContentItem("testMessage")
@@ -30,7 +30,7 @@ func TestLoadAndSaveJsonIntoUserContent(t *testing.T) {
 	err = creator.saveUserContentsToJson(savePath, &userContents)
 	assert.Nil(t, err)
 
-	err = creator.loadJsonToUserContent(savePath, &userContents)
+	err = creator.loadJsonToUserContents(savePath, &userContents)
 
 	assert.Equal(t, "testMessage", userContents.ContentItems[0].Content)
 
