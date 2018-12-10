@@ -68,14 +68,14 @@ func (slackApp *SlackApp) Respond(msg *slack.MessageEvent) {
 		slackApp.conversationID = slackApp.getNewConversationID()
 		response = "new conversation with ID:" + slackApp.conversationID
 
-		slackApp.rtm.SendMessage(slackApp.rtm.NewOutgoingMessage(response, msg.Channel))
-
 		newManager, err := NewMessageManager(slackApp.manager.responder)
 		if err != nil {
-			fmt.Println(err)
+			response = "An error occurred: " + err.Error()
 		}
-
 		slackApp.manager = newManager
+
+		slackApp.rtm.SendMessage(slackApp.rtm.NewOutgoingMessage(response, msg.Channel))
+
 		return
 
 	} else if strings.Contains(strings.ToLower(text), "%switch") {
