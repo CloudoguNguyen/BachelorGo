@@ -28,6 +28,6 @@ func TestLoadAndSaveJsonIntoUserContent(t *testing.T) {
 
 	err = userContents.loadJsonToUserContents(savePath)
 
-	assert.Equal(t, "testMessage", userContents.ContentItems[0].Content)
+	assert.Equal(t, "testMessage2", userContents.ContentItems[1].Content)
 
 }
