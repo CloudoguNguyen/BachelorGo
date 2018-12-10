@@ -36,8 +36,6 @@ func (slackApp *SlackApp) Run() {
 	for {
 		select {
 		case message := <-slackApp.rtm.IncomingEvents:
-			fmt.Println("Event Received: ")
-
 			switch event := message.Data.(type) {
 			case *slack.ConnectedEvent:
 				fmt.Println("Connection counter:", event.ConnectionCount)

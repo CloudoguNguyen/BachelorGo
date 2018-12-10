@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"github.com/BachelorGo/service"
 	"github.com/stretchr/testify/assert"
 	"strings"
@@ -35,8 +34,7 @@ func TestGetIntent(t *testing.T) {
 	intent, err := consultant.getIntent("get art", "testConv")
 
 	assert.Nil(t, err)
-
-	fmt.Println(intent)
+	assert.Equal(t, "ask-art", intent)
 }
 
 func TestGetResponse(t *testing.T) {
@@ -58,7 +56,6 @@ func TestGetToKnowUser(t *testing.T) {
 	res, err := consultant.getToKnowUser("testConv")
 
 	assert.Nil(t, err)
-
 	assert.NotNil(t, res)
 }
 
@@ -69,7 +66,13 @@ func TestGetResponseNoIntentFound(t *testing.T) {
 	res, err := consultant.GetResponse("Wakakakaka", "testConvasdasdasd", &profile)
 
 	assert.Nil(t, err)
+	assert.Equal(t, "We have enough information about you now. Please tell us what you want", res)
 
+	consultant.isProfileKnown["testConvasdasdasd"] = true
+
+	res, err = consultant.GetResponse("Wakakakaka", "testConvasdasdasd", &profile)
+
+	assert.Nil(t, err)
 	assert.Equal(t, "We don't know what you want", res)
 
 }
