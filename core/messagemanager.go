@@ -142,7 +142,7 @@ func (manager *MessageManager) saveUserContentsToJson(path string, userContent *
 
 	err = encoder.Encode(userContent)
 	if err != nil {
-		return errors.Wrapf(err, "failed to create encode")
+		return errors.Wrapf(err, "failed to encode")
 	}
 
 	return nil

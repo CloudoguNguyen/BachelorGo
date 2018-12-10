@@ -97,12 +97,12 @@ func getIntensity(value int) string {
 
 func (ac *ArtConsultant) recommendArt(profile service.UserProfile) string {
 
-	recommendableArts := ac.getFittedArts(profile)
+	matchingArts := ac.getMatchingArts(profile)
 
-	if len(recommendableArts) > 0 {
+	if len(matchingArts) > 0 {
 		response := "You might like this direction of art: "
 
-		for _, art := range recommendableArts {
+		for _, art := range matchingArts {
 			response += "\n " + art
 		}
 
@@ -113,30 +113,30 @@ func (ac *ArtConsultant) recommendArt(profile service.UserProfile) string {
 
 }
 
-func (ac *ArtConsultant) getFittedArts(profile service.UserProfile) []string {
-	recommendableArts := []string{}
+func (ac *ArtConsultant) getMatchingArts(profile service.UserProfile) []string {
+	matchingArts := []string{}
 
 	if getIntensity(profile.Openness()) == highIntensity {
-		recommendableArts = append(recommendableArts, artSurrealism, artComplex, artJapanese)
+		matchingArts = append(matchingArts, artSurrealism, artComplex, artJapanese)
 	} else if getIntensity(profile.Openness()) == lowIntensity {
-		recommendableArts = append(recommendableArts, artNeutral, artNatural)
+		matchingArts = append(matchingArts, artNeutral, artNatural)
 	}
 
 	if getIntensity(profile.Conscientiousness()) == highIntensity {
-		recommendableArts = append(recommendableArts, artRepresentative)
+		matchingArts = append(matchingArts, artRepresentative)
 	} else if getIntensity(profile.Conscientiousness()) == lowIntensity {
-		recommendableArts = append(recommendableArts, artImpression, artTradition)
+		matchingArts = append(matchingArts, artImpression, artTradition)
 	}
 
 	if getIntensity(profile.Extraversion()) == highIntensity {
-		recommendableArts = append(recommendableArts, artKubism)
+		matchingArts = append(matchingArts, artKubism)
 	}
 
 	if getIntensity(profile.Neuroticism()) == highIntensity {
-		recommendableArts = append(recommendableArts, artNegEmotion, artPop, artAbstract)
+		matchingArts = append(matchingArts, artNegEmotion, artPop, artAbstract)
 	}
 
-	return recommendableArts
+	return matchingArts
 }
 
 func (ac *ArtConsultant) getIntent(message string, conversationID string) (string, error) {
