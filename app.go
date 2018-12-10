@@ -7,7 +7,9 @@ import (
 
 func main() {
 
-	bot, err := core.NewSlackBot()
+	artConsultant := core.NewArtConsultant()
+
+	bot, err := core.NewSlackBot(artConsultant)
 	if err != nil {
 		fmt.Println(err)
 	}

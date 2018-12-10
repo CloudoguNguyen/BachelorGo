@@ -86,7 +86,3 @@ func (profile *UserProfile) ProfileAsString() string {
 	}
 	return result
 }
-
-func (profile *UserProfile) InvalidProfileAsString() string {
-	return "Extraversion 999"
-}

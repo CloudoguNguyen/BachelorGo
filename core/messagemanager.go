@@ -5,8 +5,10 @@ import (
 	"github.com/BachelorGo/service"
 	"github.com/pkg/errors"
 	"io/ioutil"
+	"math/rand"
 	"os"
 	"strings"
+	"time"
 )
 
 type MessageManager struct {
@@ -58,14 +60,8 @@ func (manager *MessageManager) getUserProfile(path string) (service.UserProfile,
 	if err != nil {
 		return service.UserProfile{}, errors.Wrapf(err, "failed update profile in conversation")
 	}
+
 	return profile, nil
-}
-
-func (manager *MessageManager) NewConversationID() string {
-
-	newID := manager.responder.GetNewRandomConversationID()
-
-	return newID
 }
 
 /*
@@ -150,4 +146,17 @@ func (manager *MessageManager) saveUserContentsToJson(path string, userContent *
 	}
 
 	return nil
+}
+
+func (manager *MessageManager) NewRandomConversationID() string {
+
+	rand.Seed(time.Now().UnixNano())
+
+	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
+
+	b := make([]rune, 10)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
 }

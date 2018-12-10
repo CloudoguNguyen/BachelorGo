@@ -22,7 +22,7 @@ func NewPersonalityInsight() (*WatsonPI, error) {
 
 	client, err := personality_insights.NewClient(config)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to create personality Client")
+		return nil, errors.Wrapf(err, "failed to create personality client")
 	}
 
 	return &WatsonPI{client}, nil

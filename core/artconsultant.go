@@ -1,11 +1,8 @@
 package core
 
 import (
-	"fmt"
 	"github.com/BachelorGo/service"
 	"github.com/pkg/errors"
-	"math/rand"
-	"time"
 )
 
 const (
@@ -42,25 +39,22 @@ func NewArtConsultant() *ArtConsultant {
 
 func (ac *ArtConsultant) GetResponse(message string, conversationID string, profile *service.UserProfile) (string, error) {
 
+	response := ""
+
 	if message == profile_not_valid {
 
-		message, err := ac.getToKnowUser(conversationID)
+		response, err := ac.getToKnowUser(conversationID)
 		if err != nil {
-			return "", errors.Wrapf(err, "failed to get get to know user")
+			return "", errors.Wrapf(err, "failed to get to know user")
 		}
 
-		return message, nil
+		return response, nil
 	}
-
-	response := ""
 
 	intent, err := ac.getIntent(message, conversationID)
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to get intent")
 	}
-
-	fmt.Println(intent)
-	fmt.Println(message)
 
 	if intent == "ask-art" {
 		response = ac.recommendArt(*profile)
@@ -109,10 +103,10 @@ func (ac *ArtConsultant) recommendArt(profile service.UserProfile) string {
 		response := "You might like this direction of art: "
 
 		for _, art := range recommendableArts {
-			response += art + ","
+			response += "\n " + art
 		}
 
-		response = response[:(len(response) - 1)]
+		//response = response[:(len(response) - 2)]
 
 		return response
 	}
@@ -159,17 +153,4 @@ func (ac *ArtConsultant) getIntent(message string, conversationID string) (strin
 
 	return "", nil
 
-}
-
-func (ac *ArtConsultant) GetNewRandomConversationID() string {
-
-	rand.Seed(time.Now().UnixNano())
-
-	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
-
-	b := make([]rune, 10)
-	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
-	}
-	return string(b)
 }

@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
@@ -15,8 +14,6 @@ func TestProfileAsString(t *testing.T) {
 	assert.Nil(t, err)
 
 	result := userProfile.ProfileAsString()
-	fmt.Println(result)
-
 	assert.True(t, strings.Contains(result, "Extraversion 93"))
 }
 

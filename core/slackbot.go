@@ -13,23 +13,21 @@ type SlackApp struct {
 	slackToken     string
 	client         *slack.Client
 	rtm            *slack.RTM
-	responder      Responder
 	manager        *MessageManager
 	conversationID string
 }
 
-func NewSlackBot() (*SlackApp, error) {
+func NewSlackBot(responder Responder) (*SlackApp, error) {
 
 	client := slack.New(slackToken)
-	artConsultant := NewArtConsultant()
 
 	rtm := client.NewRTM()
-	creator, err := NewMessageManager(artConsultant)
+	creator, err := NewMessageManager(responder)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to create MessageManager")
 	}
 
-	return &SlackApp{slackToken: slackToken, client: client, rtm: rtm, responder: artConsultant, manager: creator, conversationID: "1"}, nil
+	return &SlackApp{slackToken: slackToken, client: client, rtm: rtm, manager: creator, conversationID: "1"}, nil
 }
 
 func (slackApp *SlackApp) Run() {
@@ -72,7 +70,7 @@ func (slackApp *SlackApp) Respond(msg *slack.MessageEvent) {
 
 		slackApp.rtm.SendMessage(slackApp.rtm.NewOutgoingMessage(response, msg.Channel))
 
-		newManager, err := NewMessageManager(slackApp.responder)
+		newManager, err := NewMessageManager(slackApp.manager.responder)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -91,14 +89,14 @@ func (slackApp *SlackApp) Respond(msg *slack.MessageEvent) {
 
 	response, err := slackApp.manager.Response(text, slackApp.conversationID)
 	if err != nil {
-		fmt.Println(err)
+		response = "An error occurred: " + err.Error()
 	}
 
 	slackApp.rtm.SendMessage(slackApp.rtm.NewOutgoingMessage(response, msg.Channel))
 }
 
 func (slackApp *SlackApp) getNewConversationID() string {
-	newID := slackApp.manager.NewConversationID()
+	newID := slackApp.manager.NewRandomConversationID()
 	return newID
 }
 
