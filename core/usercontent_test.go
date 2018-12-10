@@ -6,10 +6,6 @@ import (
 )
 
 func TestLoadAndSaveJsonIntoUserContent(t *testing.T) {
-	artConsultant := NewArtConsultant()
-
-	creator, err := NewMessageManager(artConsultant)
-	assert.Nil(t, err)
 
 	userContents := UserContents{
 		ContentItems: []ContentItem{},
@@ -18,7 +14,7 @@ func TestLoadAndSaveJsonIntoUserContent(t *testing.T) {
 	loadPath := "../resources/test/empty.json"
 	savePath := "../resources/test/contents2.json"
 
-	err = creator.loadJsonToUserContents(loadPath, &userContents)
+	err := userContents.loadJsonToUserContents(loadPath)
 	assert.Nil(t, err)
 
 	contentItem := newContentItem("testMessage")
@@ -27,10 +23,10 @@ func TestLoadAndSaveJsonIntoUserContent(t *testing.T) {
 	contentItem = newContentItem("testMessage2")
 	userContents.ContentItems = append(userContents.ContentItems, contentItem)
 
-	err = creator.saveUserContentsToJson(savePath, &userContents)
+	err = userContents.saveUserContentsToJson(savePath)
 	assert.Nil(t, err)
 
-	err = creator.loadJsonToUserContents(savePath, &userContents)
+	err = userContents.loadJsonToUserContents(savePath)
 
 	assert.Equal(t, "testMessage", userContents.ContentItems[0].Content)
 

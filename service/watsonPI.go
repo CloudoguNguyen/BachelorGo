@@ -42,9 +42,10 @@ func (watson *WatsonPI) GetUserProfile(pathToContent string) (UserProfile, error
 	if err != nil {
 		return userProfile, errors.Wrapf(err, "failed to open %s", pathToContent)
 	}
+
 	profile, err := watson.Client.GetProfile(file, "application/json", "en")
 	if err != nil {
-		return userProfile, errors.Wrapf(err, "failed to parse json profile")
+		return userProfile, errors.Wrapf(err, "failed to get profile from json file")
 	}
 
 	userProfile = UserProfile{profile: profile}

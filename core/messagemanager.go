@@ -1,12 +1,9 @@
 package core
 
 import (
-	"encoding/json"
 	"github.com/BachelorGo/service"
 	"github.com/pkg/errors"
-	"io/ioutil"
 	"math/rand"
-	"os"
 	"strings"
 	"time"
 )
@@ -33,7 +30,9 @@ func (manager *MessageManager) Response(message string, conversationID string) (
 
 	path := "resources/conversations/" + conversationID + ".json"
 
-	err := manager.addMessageIntoConversationJson(message, path)
+	userContent := UserContents{}
+
+	err := userContent.addMessageIntoUserContent(message, path)
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to add message to json with %s", conversationID)
 	}
@@ -64,90 +63,6 @@ func (manager *MessageManager) getUserProfile(path string) (service.UserProfile,
 	return profile, nil
 }
 
-/*
-1. Create/read Json file
-2. Load it into userContent
-3. Add contentItem into userContent
-4. Delete old Json file
-5. Save new userContent into new JsonFile
-*/
-func (manager *MessageManager) addMessageIntoConversationJson(message string, jsonPath string) error {
-
-	userContent := UserContents{}
-	err := manager.loadJsonToUserContents(jsonPath, &userContent)
-	if err != nil {
-		return errors.Wrapf(err, "failed to load user content %s", jsonPath)
-	}
-
-	contentItem := newContentItem(message)
-	userContent.ContentItems = append(userContent.ContentItems, contentItem)
-
-	err = manager.saveUserContentsToJson(jsonPath, &userContent)
-	if err != nil {
-		return errors.Wrapf(err, "failed to save user content %s", jsonPath)
-	}
-
-	return nil
-
-}
-
-func (manager *MessageManager) loadJsonToUserContents(path string, content *UserContents) error {
-
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-
-		// If file doenst exist
-		jsonFile, err := os.Create(path)
-		if err != nil {
-			return errors.Wrapf(err, "failed to create %s", path)
-		}
-
-		_, err = jsonFile.WriteString("{}")
-		if err != nil {
-			return errors.Wrapf(err, "failed to write into %s", path)
-		}
-		defer jsonFile.Close()
-	}
-
-	// if we os.Open returns an error then handle it
-
-	jsonFile, err := os.Open(path)
-	if err != nil {
-		return errors.Wrapf(err, "failed to read %s", path)
-	}
-
-	byteValue, err := ioutil.ReadAll(jsonFile)
-	if err != nil {
-		return errors.Wrapf(err, "failed to load %s into Json", path)
-	}
-
-	err = json.Unmarshal(byteValue, &content)
-	if err != nil {
-		return errors.Wrapf(err, "failed to unmarshal into Json")
-	}
-	return nil
-
-}
-
-func (manager *MessageManager) saveUserContentsToJson(path string, userContent *UserContents) error {
-
-	os.Remove(path)
-
-	fo, err := os.Create(path)
-	if err != nil {
-		return errors.Wrapf(err, "failed to create UserProfile save path")
-	}
-
-	defer fo.Close()
-	encoder := json.NewEncoder(fo)
-
-	err = encoder.Encode(userContent)
-	if err != nil {
-		return errors.Wrapf(err, "failed to encode")
-	}
-
-	return nil
-}
-
 func (manager *MessageManager) NewRandomConversationID() string {
 
 	rand.Seed(time.Now().UnixNano())
@@ -159,4 +74,12 @@ func (manager *MessageManager) NewRandomConversationID() string {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
 	return string(b)
+}
+
+func newContentItem(message string) ContentItem {
+	return ContentItem{
+		Content:     message,
+		Contenttype: "text/plain",
+		Language:    "en",
+	}
 }
