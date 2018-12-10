@@ -24,7 +24,7 @@ type UserContents struct {
 4. Delete old Json file
 5. Save new userContent into new JsonFile
 */
-func (userContent *UserContents) addMessageIntoUserContent(message string, jsonPath string) error {
+func (userContent *UserContents) addMessageToUserContent(message string, jsonPath string) error {
 
 	err := userContent.loadJsonToUserContents(jsonPath)
 	if err != nil {

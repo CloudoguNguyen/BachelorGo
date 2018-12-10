@@ -32,7 +32,7 @@ func (manager *MessageManager) Response(message string, conversationID string) (
 
 	userContent := UserContents{}
 
-	err := userContent.addMessageIntoUserContent(message, path)
+	err := userContent.addMessageToUserContent(message, path)
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to add message to json with %s", conversationID)
 	}
