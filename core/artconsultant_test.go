@@ -69,7 +69,13 @@ func TestGetResponseNoIntentFound(t *testing.T) {
 	res, err := consultant.GetResponse("Wakakakaka", "testConvasdasdasd", &profile)
 
 	assert.Nil(t, err)
+	assert.Equal(t, "We have enough information about you now. Please tell us what you want", res)
 
+	consultant.isProfileKnown["testConvasdasdasd"] = true
+
+	res, err = consultant.GetResponse("Wakakakaka", "testConvasdasdasd", &profile)
+
+	assert.Nil(t, err)
 	assert.Equal(t, "We don't know what you want", res)
 
 }
