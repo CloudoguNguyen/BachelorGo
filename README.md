@@ -11,7 +11,7 @@
 
 - `cd github.com && git clone https://github.com/CloudoguNguyen/BachelorGo`
 
-- `cd github.com/BachelorGo && dep ensure`
+- `cd BachelorGo && dep ensure`
 
 - `go run app.go`
 
