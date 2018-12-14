@@ -9,7 +9,7 @@
 - [Set $GOPATH](https://github.com/golang/go/wiki/SettingGOPATH)
 - `cd $GOPATH/src/ && mkdir github.com`
 
-- `cd github.com && git clone https://github.com/CloudoguNguyen/BachelorGo`
+- `cd github.com && git clone https://github.com/TLNBS/BachelorGo`
 
 - `cd BachelorGo && dep ensure`
 
