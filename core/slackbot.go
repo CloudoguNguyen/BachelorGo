@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"github.com/BachelorGo/responder"
 	"github.com/nlopes/slack"
 	"github.com/pkg/errors"
 	"strings"
@@ -17,7 +18,7 @@ type SlackApp struct {
 	conversationID string
 }
 
-func NewSlackBot(responder Responder) (*SlackApp, error) {
+func NewSlackBot(responder responder.Responder) (*SlackApp, error) {
 
 	client := slack.New(slackToken)
 

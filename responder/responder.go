@@ -1,4 +1,4 @@
-package core
+package responder
 
 import "github.com/BachelorGo/service"
 

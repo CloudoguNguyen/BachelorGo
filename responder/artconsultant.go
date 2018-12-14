@@ -1,4 +1,4 @@
-package core
+package responder
 
 import (
 	"github.com/BachelorGo/service"
@@ -22,6 +22,7 @@ const (
 	lowIntensity       = "low"
 	middleIntensity    = "middle"
 	artConsultantToken = "1fedc8b90ea54efc652b6a42c82de9f2"
+	ProfileNotValid    = "profile not valid"
 )
 
 type ArtConsultant struct {
@@ -41,7 +42,7 @@ func (ac *ArtConsultant) GetResponse(message string, conversationID string, prof
 
 	response := ""
 
-	if message == profile_not_valid {
+	if message == ProfileNotValid {
 
 		response, err := ac.getToKnowUser(conversationID)
 		if err != nil {
@@ -76,9 +77,9 @@ func (ac *ArtConsultant) GetResponse(message string, conversationID string, prof
 
 func (ac *ArtConsultant) getToKnowUser(conversationID string) (string, error) {
 
-	reply, err := ac.recastClient.GetReply(profile_not_valid, conversationID)
+	reply, err := ac.recastClient.GetReply(ProfileNotValid, conversationID)
 	if err != nil {
-		return "", errors.Wrapf(err, "failed to get reply from %s", profile_not_valid)
+		return "", errors.Wrapf(err, "failed to get reply from %s", ProfileNotValid)
 	}
 
 	return reply, nil

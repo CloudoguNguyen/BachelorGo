@@ -1,6 +1,7 @@
 package core
 
 import (
+	"github.com/BachelorGo/responder"
 	"github.com/BachelorGo/service"
 	"github.com/pkg/errors"
 	"math/rand"
@@ -10,13 +11,11 @@ import (
 
 type MessageManager struct {
 	watsonPI    *service.WatsonPI
-	responder   Responder
+	responder   responder.Responder
 	enoughWords bool
 }
 
-const profile_not_valid = "profile not valid"
-
-func NewMessageManager(responder Responder) (*MessageManager, error) {
+func NewMessageManager(responder responder.Responder) (*MessageManager, error) {
 
 	watsonPI, err := service.NewPersonalityInsight()
 	if err != nil {
@@ -40,7 +39,7 @@ func (manager *MessageManager) Response(message string, conversationID string) (
 	profile, err := manager.getUserProfile(path)
 	if err != nil {
 		if strings.Contains(err.Error(), "less than the minimum number of words required") {
-			message = profile_not_valid
+			message = responder.ProfileNotValid
 		} else {
 			return "", errors.Wrapf(err, "failed to update profile in conversation %s", conversationID)
 		}

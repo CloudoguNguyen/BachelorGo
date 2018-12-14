@@ -3,11 +3,12 @@ package main
 import (
 	"fmt"
 	"github.com/BachelorGo/core"
+	"github.com/BachelorGo/responder"
 )
 
 func main() {
 
-	artConsultant := core.NewArtConsultant()
+	artConsultant := responder.NewArtConsultant()
 
 	bot, err := core.NewSlackBot(artConsultant)
 	if err != nil {
