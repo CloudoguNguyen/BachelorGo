@@ -15,4 +15,4 @@
 
 - `go run app.go`
 
-- talk to the bot on `https://nguyenbachelorthesis.slack.com/` 
+- talk to the BachelorBot on `https://nguyenbachelorthesis.slack.com/`. Use `%new`to start a conversation 
