@@ -1,10 +1,10 @@
 package service
 
 import (
-	"github.com/liviosoares/go-watson-sdk/watson"
-	"github.com/liviosoares/go-watson-sdk/watson/personality_insights"
 	"github.com/pkg/errors"
-	"os"
+	"github.com/watson-developer-cloud/go-sdk/core"
+	"github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
+	"io/ioutil"
 )
 
 const (
@@ -13,21 +13,21 @@ const (
 )
 
 type WatsonPI struct {
-	Client personality_insights.Client
+	Client *personalityinsightsv3.PersonalityInsightsV3
 }
 
 func NewPersonalityInsight() (*WatsonPI, error) {
 
-	config := watson.Config{
-		Credentials: watson.Credentials{
+	client, err := personalityinsightsv3.
+		NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
+			Version:  "2017-10-13",
 			Username: watsonUserName,
 			Password: watsonPW,
-		},
-	}
+		})
 
-	client, err := personality_insights.NewClient(config)
+	// Check successful instantiation
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to create personality client")
+		return nil, errors.Wrapf(err, "failed to create personality insight options ")
 	}
 
 	return &WatsonPI{client}, nil
@@ -38,17 +38,25 @@ func (watson *WatsonPI) GetUserProfile(pathToContent string) (UserProfile, error
 
 	userProfile := UserProfile{}
 
-	file, err := os.Open(pathToContent)
+	file, err := ioutil.ReadFile(pathToContent)
 	if err != nil {
 		return userProfile, errors.Wrapf(err, "failed to open %s", pathToContent)
 	}
 
-	profile, err := watson.Client.GetProfile(file, "application/json", "en")
+	profileOptions := watson.Client.
+		NewProfileOptions(personalityinsightsv3.ProfileOptions_ContentType_ApplicationJSON)
+	profileOptions.SetBody(string(file))
+	profileOptions.ContentLanguage = core.StringPtr("en")
+	profileOptions.AcceptLanguage = core.StringPtr("en")
+
+	response, err := watson.Client.Profile(profileOptions)
 	if err != nil {
-		return userProfile, errors.Wrapf(err, "failed to get profile from json file")
+		return userProfile, errors.Wrapf(err, "failed to parse profile options")
 	}
 
-	userProfile = UserProfile{profile: profile}
+	profile := watson.Client.GetProfileResult(response)
+
+	userProfile = UserProfile{profile: *profile}
 
 	return userProfile, nil
 }
