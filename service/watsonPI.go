@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/json"
 	"github.com/pkg/errors"
 	"github.com/watson-developer-cloud/go-sdk/core"
 	"github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
@@ -44,9 +45,12 @@ func (watson *WatsonPI) GetUserProfile(pathToContent string) (UserProfile, error
 		return userProfile, errors.Wrapf(err, "failed to open %s", pathToContent)
 	}
 
+	content := new(personalityinsightsv3.Content)
+	json.Unmarshal(file, content)
+
 	profileOptions := watson.Client.
 		NewProfileOptions(personalityinsightsv3.ProfileOptions_ContentType_ApplicationJSON)
-	profileOptions.SetBody(string(file))
+	profileOptions.Content = content
 	profileOptions.ContentLanguage = core.StringPtr("en")
 	profileOptions.AcceptLanguage = core.StringPtr("en")
 

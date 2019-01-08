@@ -2,7 +2,6 @@ package service
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/pkg/errors"
 	"github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
 	"io/ioutil"
@@ -15,40 +14,34 @@ type UserProfile struct {
 
 func (profile *UserProfile) Openness() int {
 
-	fmt.Println("openness = ", profile.profile.Personality[0].Name)
-	value := profile.profile.Personality[0].RawScore
+	value := profile.profile.Personality[0].Percentile
 	intValue := int(*value * 100)
 	return intValue
 }
 
 func (profile *UserProfile) Conscientiousness() int {
 
-	fmt.Println("Conscientiousness = ", profile.profile.Personality[1].Name)
-
-	value := profile.profile.Personality[1].RawScore
-	intValue := int(*value * 100)
+	value := *profile.profile.Personality[1].Percentile
+	intValue := int(value * 100)
 	return intValue
 }
 func (profile *UserProfile) Extraversion() int {
-	fmt.Println("Extraversion = ", profile.profile.Personality[2].Name)
 
-	value := profile.profile.Personality[2].RawScore
+	value := profile.profile.Personality[2].Percentile
 	intValue := int(*value * 100)
 	return intValue
 }
 
 func (profile *UserProfile) Agreeableness() int {
-	fmt.Println("Agreeableness = ", profile.profile.Personality[3].Name)
 
-	value := profile.profile.Personality[3].RawScore
+	value := profile.profile.Personality[3].Percentile
 	intValue := int(*value * 100)
 	return intValue
 }
 
 func (profile *UserProfile) Neuroticism() int {
-	fmt.Println("Neuroticism = ", profile.profile.Personality[4].Name)
 
-	value := profile.profile.Personality[4].RawScore
+	value := profile.profile.Personality[4].Percentile
 	intValue := int(*value * 100)
 	return intValue
 }
