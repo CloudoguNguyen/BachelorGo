@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/pkg/errors"
 	"github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
 	"io/ioutil"
@@ -12,36 +13,45 @@ type UserProfile struct {
 	profile personalityinsightsv3.Profile
 }
 
-/*
 func (profile *UserProfile) Openness() int {
-	value := profile.profile.
-	intValue := int(value.Percentage * 100)
+
+	fmt.Println("openness = ", profile.profile.Personality[0].Name)
+	value := profile.profile.Personality[0].RawScore
+	intValue := int(*value * 100)
 	return intValue
 }
 
 func (profile *UserProfile) Conscientiousness() int {
-	value := profile.profile.Tree.Children[0].Children[0].Children[1]
-	intValue := int(value.Percentage * 100)
+
+	fmt.Println("Conscientiousness = ", profile.profile.Personality[1].Name)
+
+	value := profile.profile.Personality[1].RawScore
+	intValue := int(*value * 100)
 	return intValue
 }
 func (profile *UserProfile) Extraversion() int {
-	value := profile.profile.Tree.Children[0].Children[0].Children[2]
-	intValue := int(value.Percentage * 100)
+	fmt.Println("Extraversion = ", profile.profile.Personality[2].Name)
+
+	value := profile.profile.Personality[2].RawScore
+	intValue := int(*value * 100)
 	return intValue
 }
 
 func (profile *UserProfile) Agreeableness() int {
-	value := profile.profile.Tree.Children[0].Children[0].Children[3]
-	intValue := int(value.Percentage * 100)
+	fmt.Println("Agreeableness = ", profile.profile.Personality[3].Name)
+
+	value := profile.profile.Personality[3].RawScore
+	intValue := int(*value * 100)
 	return intValue
 }
 
 func (profile *UserProfile) Neuroticism() int {
-	value := profile.profile.Tree.Children[0].Children[0].Children[4]
-	intValue := int(value.Percentage * 100)
+	fmt.Println("Neuroticism = ", profile.profile.Personality[4].Name)
+
+	value := profile.profile.Personality[4].RawScore
+	intValue := int(*value * 100)
 	return intValue
 }
-*/
 
 func (profile *UserProfile) SaveProfileAsJson(path string) error {
 	fo, err := os.Create(path)
