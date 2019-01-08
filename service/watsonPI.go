@@ -20,6 +20,7 @@ func NewPersonalityInsight() (*WatsonPI, error) {
 
 	client, err := personalityinsightsv3.
 		NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
+			URL:      "https://gateway.watsonplatform.net/personality-insights/api",
 			Version:  "2017-10-13",
 			Username: watsonUserName,
 			Password: watsonPW,
