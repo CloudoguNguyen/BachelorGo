@@ -20,7 +20,7 @@ func TestRecommendArt(t *testing.T) {
 }
 
 func getTestUserProfile(t *testing.T) service.UserProfile {
-	path := "../resources/test/profile.json"
+	path := "../resources/test/SaveProfile.json"
 
 	profile := service.UserProfile{}
 	profile.LoadJsonAsProfile(path)

@@ -2,19 +2,20 @@ package service
 
 import (
 	"github.com/stretchr/testify/assert"
-	"strings"
 	"testing"
 )
 
-func TestProfileAsString(t *testing.T) {
+func TestSaveProfile(t *testing.T) {
 
-	userProfile := UserProfile{}
-
-	err := userProfile.LoadJsonAsProfile("../resources/test/profile.json")
+	pi, err := NewPersonalityInsight()
 	assert.Nil(t, err)
 
-	result := userProfile.ProfileAsString()
-	assert.True(t, strings.Contains(result, "Extraversion 93"))
+	profile, err := pi.GetUserProfile("../resources/test/contents.json")
+	assert.Nil(t, err)
+
+	err = profile.SaveProfileAsJson("../resources/test/SaveProfile.json")
+	assert.Nil(t, err)
+
 }
 
 func TestSaveAndLoadProfileAsJson(t *testing.T) {
@@ -23,7 +24,7 @@ func TestSaveAndLoadProfileAsJson(t *testing.T) {
 
 	userProfile := UserProfile{}
 
-	err := userProfile.LoadJsonAsProfile("../resources/test/profile.json")
+	err := userProfile.LoadJsonAsProfile("../resources/test/SaveProfile.json")
 	assert.Nil(t, err)
 
 	err = userProfile.SaveProfileAsJson(path)
@@ -33,7 +34,18 @@ func TestSaveAndLoadProfileAsJson(t *testing.T) {
 	assert.Nil(t, err)
 
 	value := userProfile.Agreeableness()
+	assert.True(t, value > 1, value)
 
+	value = userProfile.Openness()
+	assert.True(t, value > 1, value)
+
+	value = userProfile.Conscientiousness()
+	assert.True(t, value > 1, value)
+
+	value = userProfile.Extraversion()
+	assert.True(t, value > 1, value)
+
+	value = userProfile.Neuroticism()
 	assert.True(t, value > 1, value)
 
 }
