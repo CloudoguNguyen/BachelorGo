@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-const slackToken = "xoxb-438453325860-438070557617-uL5w2zkIydaDDWXkP0V4RRfh"
+const slackToken = "xoxb-438453325860-438070557617-qdHoPBXAeEUDDxOGyPCvo3Vb"
 
 type SlackApp struct {
 	slackToken     string
