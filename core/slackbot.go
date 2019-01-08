@@ -23,12 +23,12 @@ func NewSlackBot(responder responder.Responder) (*SlackApp, error) {
 	client := slack.New(slackToken)
 
 	rtm := client.NewRTM()
-	creator, err := NewMessageManager(responder)
+	manager, err := NewMessageManager(responder)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to create MessageManager")
 	}
 
-	return &SlackApp{slackToken: slackToken, client: client, rtm: rtm, manager: creator, conversationID: "1"}, nil
+	return &SlackApp{slackToken: slackToken, client: client, rtm: rtm, manager: manager, conversationID: "1"}, nil
 }
 
 func (slackApp *SlackApp) Run() {
@@ -49,7 +49,7 @@ func (slackApp *SlackApp) Run() {
 				fmt.Printf("Error: %s\n", event.Error())
 
 			case *slack.InvalidAuthEvent:
-				fmt.Printf("Invalid credentials")
+				fmt.Printf("Invalid credentials. Exiting")
 				break
 			}
 		}

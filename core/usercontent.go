@@ -47,7 +47,7 @@ func (userContent *UserContents) loadJsonToUserContents(path string) error {
 
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 
-		// If file doenst exist
+		// If file doesn't exist
 		jsonFile, err := os.Create(path)
 		if err != nil {
 			return errors.Wrapf(err, "failed to create %s", path)

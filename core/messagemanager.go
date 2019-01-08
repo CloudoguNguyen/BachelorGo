@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"github.com/BachelorGo/responder"
 	"github.com/BachelorGo/service"
 	"github.com/pkg/errors"
@@ -29,8 +28,6 @@ func NewMessageManager(responder responder.Responder) (*MessageManager, error) {
 func (manager *MessageManager) Response(message string, conversationID string) (string, error) {
 
 	path := "resources/conversations/" + conversationID + ".json"
-
-	fmt.Println(path)
 
 	userContent := UserContents{}
 
