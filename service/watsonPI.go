@@ -26,14 +26,22 @@ func NewPersonalityInsight() (*WatsonPI, error) {
 			Username: watsonUserName,
 			Password: watsonPW,
 		})
-
-	// Check successful instantiation
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to create personality insight options ")
 	}
 
 	return &WatsonPI{client}, nil
 
+}
+
+func (watson *WatsonPI) createProfileOption(content Content) ProfileOptions{
+	profileOptions := watson.Client.
+		NewProfileOptions(personalityinsightsv3.ProfileOptions_ContentType_ApplicationJSON)
+	profileOptions.Content = content
+	profileOptions.ContentLanguage = core.StringPtr("en")
+	profileOptions.AcceptLanguage = core.StringPtr("en")
+
+	return profileOptions
 }
 
 func (watson *WatsonPI) GetUserProfile(pathToContent string) (UserProfile, error) {
@@ -48,19 +56,13 @@ func (watson *WatsonPI) GetUserProfile(pathToContent string) (UserProfile, error
 	content := new(personalityinsightsv3.Content)
 	json.Unmarshal(file, content)
 
-	profileOptions := watson.Client.
-		NewProfileOptions(personalityinsightsv3.ProfileOptions_ContentType_ApplicationJSON)
-	profileOptions.Content = content
-	profileOptions.ContentLanguage = core.StringPtr("en")
-	profileOptions.AcceptLanguage = core.StringPtr("en")
-
+	profileOptions := watson.createProfileOption(content)
 	response, err := watson.Client.Profile(profileOptions)
 	if err != nil {
 		return userProfile, errors.Wrapf(err, "failed to parse profile options")
 	}
 
 	profile := watson.Client.GetProfileResult(response)
-
 	userProfile = UserProfile{profile: *profile}
 
 	return userProfile, nil
