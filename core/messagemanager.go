@@ -47,7 +47,7 @@ func (manager *MessageManager) Response(message string, conversationID string) (
 
 	answer, err := manager.responder.GetResponse(message, conversationID, &profile)
 	if err != nil {
-		return "", errors.Wrapf(err, "failed to get reply with the message %s", message)
+		return "", errors.Wrapf(err, "failed to get reply with the message")
 	}
 	return answer, nil
 }

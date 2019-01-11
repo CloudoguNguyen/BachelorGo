@@ -6,22 +6,24 @@ import (
 )
 
 const (
-	artSurrealism      = "surrealism"
-	artComplex         = "complex art"
-	artJapanese        = "japanese art"
-	artNeutral         = "neutral_art"
-	artNatural         = "natural_art"
-	artRepresentative  = "representative art"
-	artImpression      = "impressionism"
-	artTradition       = "traditional art"
-	artKubism          = "kubism"
-	artNegEmotion      = "negatively emotional art"
-	artPop             = "pop-art"
-	artAbstract        = "abstract art"
-	highIntensity      = "high"
-	lowIntensity       = "low"
-	middleIntensity    = "middle"
-	artConsultantToken = "1fedc8b90ea54efc652b6a42c82de9f2"
+	artSurrealism     = "surrealism"
+	artComplex        = "complex art"
+	artJapanese       = "japanese art"
+	artNeutral        = "neutral art"
+	artNatural        = "natural art"
+	artRepresentative = "representative art"
+	artImpression     = "impressionism"
+	artTradition      = "traditional art"
+	artKubism         = "kubism"
+	artNegEmotion     = "negatively emotional art"
+	artPop            = "pop-art"
+	artAbstract       = "abstract art"
+
+	highIntensity   = "high"
+	lowIntensity    = "low"
+	middleIntensity = "middle"
+
+	artConsultantToken = "8fe1499c88ff54d49cc6ce5a8c549f28"
 	ProfileNotValid    = "profile not valid"
 )
 
@@ -146,7 +148,7 @@ func (ac *ArtConsultant) getIntent(message string, conversationID string) (strin
 		return "", errors.Wrapf(err, "failed to get intent from message %s", message)
 	}
 
-	if intent.Confidence >= 0.93 {
+	if intent.Confidence >= 0.94 {
 		return intent.Slug, nil
 	}
 
