@@ -8,7 +8,8 @@ import (
 	"strings"
 )
 
-const slackToken = "xoxb-438453325860-520725950384-BnsHb2zyofB2SD65ELd4Wrny"
+// If expired, renew this token with Bot User OAuth Access Token on https://api.slack.com/apps/ -> OAuth & Permission
+const slackToken = "xoxb-438453325860-520725950384-etleLjJrwVQ4x3ur7jYWBCEW"
 
 type SlackApp struct {
 	slackToken     string
