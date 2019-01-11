@@ -5,11 +5,11 @@ import (
 	"github.com/BachelorGo/responder"
 	"github.com/nlopes/slack"
 	"github.com/pkg/errors"
+	"io/ioutil"
 	"strings"
 )
 
-// If expired, renew this token with Bot User OAuth Access Token on https://api.slack.com/apps/ -> OAuth & Permission
-const slackToken = "xoxb-438453325860-520725950384-etleLjJrwVQ4x3ur7jYWBCEW"
+const slackTokenPath = "resources/slacktoken"
 
 type SlackApp struct {
 	slackToken     string
@@ -20,6 +20,11 @@ type SlackApp struct {
 }
 
 func NewSlackBot(responder responder.Responder) (*SlackApp, error) {
+
+	slackToken, err := getSlackAppToken(slackTokenPath)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to get slack token")
+	}
 
 	client := slack.New(slackToken)
 
@@ -105,4 +110,16 @@ func (slackApp *SlackApp) getConversationID(text string) string {
 	values := strings.Split(text, " ")
 	convID := strings.TrimSpace(values[1])
 	return convID
+}
+
+func getSlackAppToken(path string) (string, error) {
+
+	file, err := ioutil.ReadFile(path)
+	if err != nil {
+		return "", errors.Wrapf(err, "failed to open slack ooken file")
+	}
+
+	result := string(file)
+
+	return result, nil
 }
