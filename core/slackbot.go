@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-const slackToken = "xoxb-438453325860-520725950384-lHqNA2uuluYu5IHqBwTGkifu"
+const slackToken = "xoxb-438453325860-520725950384-BnsHb2zyofB2SD65ELd4Wrny"
 
 type SlackApp struct {
 	slackToken     string
@@ -51,6 +51,7 @@ func (slackApp *SlackApp) Run() {
 			case *slack.InvalidAuthEvent:
 				fmt.Printf("Invalid credentials. Exiting")
 				break
+
 			}
 		}
 	}
