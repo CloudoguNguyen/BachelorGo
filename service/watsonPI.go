@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"github.com/pkg/errors"
 	"github.com/watson-developer-cloud/go-sdk/core"
-	"github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
+	pi "github.com/watson-developer-cloud/go-sdk/personalityinsightsv3"
 	"io/ioutil"
 )
 
@@ -14,13 +14,13 @@ const (
 )
 
 type WatsonPI struct {
-	Client *personalityinsightsv3.PersonalityInsightsV3
+	Client *pi.PersonalityInsightsV3
 }
 
 func NewPersonalityInsight() (*WatsonPI, error) {
 
-	client, err := personalityinsightsv3.
-		NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
+	client, err := pi.
+		NewPersonalityInsightsV3(&pi.PersonalityInsightsV3Options{
 			URL:      "https://gateway.watsonplatform.net/personality-insights/api",
 			Version:  "2017-10-13",
 			Username: watsonUserName,
@@ -34,10 +34,10 @@ func NewPersonalityInsight() (*WatsonPI, error) {
 
 }
 
-func (watson *WatsonPI) createProfileOption(content Content) ProfileOptions{
+func (watson *WatsonPI) createProfileOption(content pi.Content) *pi.ProfileOptions {
 	profileOptions := watson.Client.
-		NewProfileOptions(personalityinsightsv3.ProfileOptions_ContentType_ApplicationJSON)
-	profileOptions.Content = content
+		NewProfileOptions(pi.ProfileOptions_ContentType_ApplicationJSON)
+	profileOptions.Content = &content
 	profileOptions.ContentLanguage = core.StringPtr("en")
 	profileOptions.AcceptLanguage = core.StringPtr("en")
 
@@ -53,13 +53,16 @@ func (watson *WatsonPI) GetUserProfile(pathToContent string) (UserProfile, error
 		return userProfile, errors.Wrapf(err, "failed to open %s", pathToContent)
 	}
 
-	content := new(personalityinsightsv3.Content)
-	json.Unmarshal(file, content)
+	content := new(pi.Content)
+	err = json.Unmarshal(file, content)
+	if err != nil {
+		return userProfile, errors.Wrap(err, "failed to unmarshal json")
+	}
 
-	profileOptions := watson.createProfileOption(content)
+	profileOptions := watson.createProfileOption(*content)
 	response, err := watson.Client.Profile(profileOptions)
 	if err != nil {
-		return userProfile, errors.Wrapf(err, "failed to parse profile options")
+		return userProfile, errors.Wrap(err, "failed to parse profile options")
 	}
 
 	profile := watson.Client.GetProfileResult(response)
