@@ -25,6 +25,11 @@ func NewMessageManager(responder responder.Responder) (*MessageManager, error) {
 	return &MessageManager{watsonPI, responder, true}, nil
 }
 
+/**
+1. Add message of user to the collection of all user messages (the collection name is the same as conversationID)
+2. Create user profile based on that collection (collection can be found at resources/conversations)
+3. Get a response from Responder based on the message, conversationID and the user profile
+*/
 func (manager *MessageManager) Response(message string, conversationID string) (string, error) {
 
 	path := "resources/conversations/" + conversationID + ".json"

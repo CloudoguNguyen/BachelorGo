@@ -18,11 +18,11 @@ type UserContents struct {
 }
 
 /*
-1. Create/read Json file
-2. Load it into userContent
-3. Add contentItem into userContent
+1. Create or read Json file
+2. Load it into userContents
+3. Add a new contentItem into userContents
 4. Delete old Json file
-5. Save new userContent into new JsonFile
+5. Save new userContent into new Json file
 */
 func (userContent *UserContents) addMessageToUserContent(message string, jsonPath string) error {
 
@@ -43,6 +43,7 @@ func (userContent *UserContents) addMessageToUserContent(message string, jsonPat
 
 }
 
+// extract the content of the path into userContent
 func (userContent *UserContents) loadJsonToUserContents(path string) error {
 
 	if _, err := os.Stat(path); os.IsNotExist(err) {
@@ -80,6 +81,7 @@ func (userContent *UserContents) loadJsonToUserContents(path string) error {
 
 }
 
+// save the content of userContents into the path
 func (userContent *UserContents) saveUserContentsToJson(path string) error {
 
 	os.Remove(path)

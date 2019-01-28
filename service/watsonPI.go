@@ -44,6 +44,8 @@ func (watson *WatsonPI) createProfileOption(content pi.Content) *pi.ProfileOptio
 	return profileOptions
 }
 
+//Create a user profile based on the contents of the path
+//File on this path should be a json file created by userContent.go
 func (watson *WatsonPI) GetUserProfile(pathToContent string) (UserProfile, error) {
 
 	userProfile := UserProfile{}

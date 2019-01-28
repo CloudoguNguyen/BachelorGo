@@ -59,6 +59,13 @@ func (slackApp *SlackApp) Run() {
 
 }
 
+/**
+Response based on the message of the user:
+
+1. If user types %new -> New conversation with random conversationID
+2. If user types %switch xxx -> Switch to an already existed conversation
+3. Else the message will be directed to MessageManager and the a response will be created
+*/
 func (slackApp *SlackApp) Respond(msg *slack.MessageEvent) {
 
 	response := ""

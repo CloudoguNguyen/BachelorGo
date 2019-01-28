@@ -40,6 +40,13 @@ func NewArtConsultant() *ArtConsultant {
 	return &ArtConsultant{recast, isProfileKnown}
 }
 
+/**
+1. If message = profile_not_valid -> A conversation for collection user info will be started.
+This will be repeated until a user profile is created
+2. Get intent of the message
+3. If the intent = ask-art -> response is art recommendation based on the user profile
+4. If intent = unknown, this information will be the response
+*/
 func (ac *ArtConsultant) GetResponse(message string, conversationID string, profile *service.UserProfile) (string, error) {
 
 	response := ""
@@ -119,6 +126,7 @@ func (ac *ArtConsultant) recommendArt(profile service.UserProfile) string {
 func (ac *ArtConsultant) getMatchingArts(profile service.UserProfile) []string {
 	matchingArts := []string{}
 
+	// if openness's intensity is high
 	if getIntensity(profile.Openness()) == highIntensity {
 		matchingArts = append(matchingArts, artSurrealism, artComplex, artJapanese)
 	} else if getIntensity(profile.Openness()) == lowIntensity {
@@ -148,6 +156,7 @@ func (ac *ArtConsultant) getIntent(message string, conversationID string) (strin
 		return "", errors.Wrapf(err, "failed to get intent from message %s", message)
 	}
 
+	// return the intent only if recast is more than 94% sure about the correctness of intent
 	if intent.Confidence >= 0.94 {
 		return intent.Slug, nil
 	}
